@@ -1,6 +1,7 @@
 import React from 'react';
+import { Text } from 'react-native';
 
 const LoginScreen = () => {
-  return <div>LoginScreen</div>;
+  return <Text>LoginScreen</Text>;
 };
 export default LoginScreen;
