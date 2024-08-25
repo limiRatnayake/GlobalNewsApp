@@ -75,6 +75,8 @@ const RegisterScreenStyles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
+ 
+
 });
 
 export default RegisterScreenStyles;

@@ -3,13 +3,12 @@ import {
   SafeAreaView,
   StatusBar, 
   useColorScheme,
-} from 'react-native';
-
+} from 'react-native'; 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AppNavigator from './src/navigation/AppNavigator';
 import globalStyles from './styles/GlobalStyles';
-
-function App() {
+ 
+function App() { 
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {

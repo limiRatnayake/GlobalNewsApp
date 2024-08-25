@@ -36,6 +36,41 @@ const globalStyles = StyleSheet.create({
     backgroundColor: theme.color.white,
     fontFamily: theme.fonts.regular,
   },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: theme.borderRadius,
+    marginBottom: 15,
+    backgroundColor: theme.color.white,
+    paddingHorizontal: 10,
+  },
+  inputWithIcon: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingRight: 10,
+  },
+  inputErrorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1, 
+    borderRadius: theme.borderRadius, 
+    backgroundColor: theme.color.white,
+    paddingHorizontal: 10,
+    borderColor: theme.color.error,
+  },
+  inputError: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: theme.color.error,
+    borderRadius: theme.borderRadius,
+    backgroundColor: theme.color.white,
+    fontFamily: theme.fonts.regular,
+  },
   divider: {
     height: 1,
     width: '100%',
@@ -51,6 +86,10 @@ const globalStyles = StyleSheet.create({
     color: theme.color.lightGray,
     marginBottom: 20,
     fontFamily: theme.fonts.regular,
+  },
+  errorMessage: {
+    marginBottom: 15,
+    color: theme.color.error,
   },
 });
 

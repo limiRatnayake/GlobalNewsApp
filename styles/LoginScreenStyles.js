@@ -37,8 +37,7 @@ const LoginScreenStyles = StyleSheet.create({
     color: '#000',
   },
   inputContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: '100%', 
   },
 
   forgotPasswordContainer: {
