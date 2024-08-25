@@ -3,7 +3,14 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const NewsCard = ({title, isHorizontal, userProfile, timestamp, category}) => {
+const NewsCard = ({
+  index,
+  title,
+  isHorizontal,
+  userProfile,
+  timestamp,
+  category,
+}) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const toggleBookmark = () => {
@@ -11,7 +18,8 @@ const NewsCard = ({title, isHorizontal, userProfile, timestamp, category}) => {
   };
 
   return (
-    <View style={[styles.card, styles.verticalCard]}>
+    <View key={index} style={[styles.card, styles.verticalCard]}>
+      {/* <Image source={{uri: userProfile}} style={styles.userProfile} /> */}
       <View style={styles.textContainer}>
         <View style={styles.header}>
           <View>
@@ -47,7 +55,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2, 
+    elevation: 2,
   },
   verticalCard: {
     width: '98%',

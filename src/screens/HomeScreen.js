@@ -6,8 +6,8 @@ import NewsCard from '../components/NewsCard';
 import BreakingNewsCard from '../components/BreakingNewsCard';
 import styles from '../../styles/HomeScreen';
 import {fetchLatestNewsArticles, fetchTopHeadlines} from '../services/news';
- 
-const HomeScreen = () => {
+
+const HomeScreen = props => {
   const [topHeading, setTopHeadings] = useState([]);
   const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,17 +19,37 @@ const HomeScreen = () => {
   }, []);
 
   const renderBreakingNewsItem = ({item, index}) => {
-    return <BreakingNewsCard item={item} index={index} />;
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          props.navigation.navigate('ArticleView', {
+            params: {
+              item: item,
+            },
+          })
+        }>
+        <BreakingNewsCard item={item} index={index} />
+      </TouchableOpacity>
+    );
   };
 
-  const renderRecommendedNewsItem = ({item}) => (
-    <NewsCard
-      title={item.title}
-      isHorizontal={false}
-      userProfile={item.author}
-      timestamp={item.publishedAt}
-      category={item.category}
-    />
+  const renderRecommendedNewsItem = ({item, index}) => (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() =>
+        props.navigation.navigate('ArticleView', { 
+        item: item
+        })
+      }>
+      <NewsCard
+        index={index}
+        title={item.title}
+        isHorizontal={false}
+        userProfile={item.author}
+        timestamp={item.publishedAt}
+        category={item.category}
+      />
+    </TouchableOpacity>
   );
 
   const getTopHeadings = async () => {
@@ -79,10 +99,10 @@ const HomeScreen = () => {
           </TouchableOpacity>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity>
-              <Icon name="search" size={24} style={styles.icon} />
+              <Icon name="search" size={30} style={styles.icon} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Icon name="notifications-none" size={24} style={styles.icon} />
+              <Icon name="notifications-none" size={30} style={styles.icon} />
             </TouchableOpacity>
           </View>
         </View>
@@ -114,7 +134,7 @@ const HomeScreen = () => {
       </View>
       <FlatList
         data={recommendedArticles}
-        renderItem={renderRecommendedNewsItem}
+        renderItem={(item, index) => renderRecommendedNewsItem(item, index)}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.verticalList}

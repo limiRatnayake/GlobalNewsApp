@@ -16,7 +16,7 @@ const apiClient = axios.create({
 export const fetchTopHeadlines = async ( ) => {
   try {
     const response = await apiClient.get(
-      `/top-headlines?country=us&sortBy=publishedAt&pageSize=10&apiKey=${API_KEY}`,
+      `/top-headlines?sources=techcrunch&pageSize=10&apiKey=${API_KEY}`,
     );
     console.log(response.data.length);
 

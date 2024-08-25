@@ -11,7 +11,7 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '5%',
+    marginBottom: '8%',
   },
   header: {
     flexDirection: 'row',
@@ -35,15 +35,15 @@ export default styles = StyleSheet.create({
     color: theme.color.primary,
   },
   profileIcon: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
     marginLeft: 10,
   },
   horizontalList: {
     marginVertical: 10,
     paddingHorizontal: 0,
-    paddingBottom: '20%',
+    paddingBottom: '30%',
   },
   horizontalItem: {
     width: 200,
