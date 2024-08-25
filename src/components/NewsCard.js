@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import moment from 'moment';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -10,32 +11,22 @@ const NewsCard = ({title, isHorizontal, userProfile, timestamp, category}) => {
   };
 
   return (
-    <View
-      style={[
-        styles.card,
-          styles.verticalCard,
-      ]}>
-      <View style={styles.imageContainer}>
-        <Image
-          source={{uri: 'https://via.placeholder.com/100'}}
-          style={styles.image}
-        />
-      </View>
+    <View style={[styles.card, styles.verticalCard]}>
       <View style={styles.textContainer}>
         <View style={styles.header}>
-          <Image source={{uri: userProfile}} style={styles.userProfile} />
           <View>
             <Text style={styles.title} numberOfLines={1}>
-              Title
+              {userProfile}
             </Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
+            <Text style={styles.timestamp}>
+              {moment(timestamp).format('DD/MM/YYYY HH:MM A')}
+            </Text>
           </View>
         </View>
         <Text style={styles.title} numberOfLines={2}>
           {title}
         </Text>
         <View style={styles.footer}>
-          <Text style={styles.category}>{category}</Text>
           <Icon
             name={isBookmarked ? 'bookmark' : 'bookmark-border'}
             size={24}
@@ -57,15 +48,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2, 
-  }, 
+  },
   verticalCard: {
-    width: '100%',
+    width: '98%',
     height: 120,
     flexDirection: 'row',
     marginBottom: 10,
   },
   imageContainer: {
-    flex: 1, 
+    flex: 1,
     // backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
@@ -103,7 +94,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   category: {
