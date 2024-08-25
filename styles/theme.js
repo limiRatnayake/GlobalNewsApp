@@ -20,6 +20,8 @@ export default {
     extraBold: 'Inter-ExtraBold',
     semiBold: 'Inter-SemiBold',
   },
-
+  padding: {
+    mainPadding: 16
+  },
   borderRadius: 12,
 };
