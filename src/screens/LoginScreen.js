@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity, 
-  Image,
-} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import styles from '../../styles/LoginScreenStyles';
 import globalStyles from '../../styles/GlobalStyles';
 import Divider from '../components/Divider';
 
-const LoginScreen = () => {
+const LoginScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -41,14 +35,20 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={globalStyles.button}>
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text style={globalStyles.buttonText}>Login</Text>
           </TouchableOpacity>
-          <Text style={styles.registerText}>
-            Not a member? <Text style={styles.registerLink}>Register now</Text>
-          </Text>
+          <View style={styles.registerPwdContainer}>
+            <Text style={styles.registerText}>Not a member?</Text>
+            <TouchableOpacity 
+              onPress={() => props.navigation.navigate('SignUp')}>
+              <Text style={styles.registerLink}>Register now</Text>
+            </TouchableOpacity>
+          </View>
           <Divider style={styles.divider} />
           <Text style={styles.orText}>Or continue with</Text>
-          <TouchableOpacity style={styles.googleButton}>
+          <TouchableOpacity
+            style={styles.googleButton}
+            onPress={() => props.navigation.navigate('SignUp')}>
             <Text style={styles.googleButtonText}>Sign In With Google</Text>
           </TouchableOpacity>
         </View>
@@ -56,7 +56,5 @@ const LoginScreen = () => {
     </View>
   );
 };
-
- 
 
 export default LoginScreen;

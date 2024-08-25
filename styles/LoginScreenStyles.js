@@ -31,7 +31,7 @@ const LoginScreenStyles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.extraBold,
     marginBottom: 20,
     justifyContent: 'flex-start',
     color: '#000',
@@ -50,19 +50,21 @@ const LoginScreenStyles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: theme.color.primary,
     marginBottom: 20,
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.semiBold,
   },
-  loginButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  registerPwdContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
   },
   registerText: {
     color: '#666',
-    marginBottom: 10,
+    marginRight: '2%'
   },
   registerLink: {
     color: '#007aff',
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.semiBold,
   },
   orText: {
     color: '#666',

@@ -9,11 +9,17 @@ export default {
     warning: '#E86339',
     lightGray: '#C5C6CC',
     naturalGray: '#D4D6DD',
+    black: '#000',
     bgOpacity: 'rgba(0, 95, 255, .74)',
   },
+  fonts: {
+    regular: 'Inter-Regular',
+    bold: 'Inter-Bold',
+    light: 'Inter-Light',
+    medium: 'Inter-Medium',
+    extraBold: 'Inter-ExtraBold',
+    semiBold: 'Inter-SemiBold',
+  },
 
-  regular: 'Roboto-Regular',
-  bold: 'Roboto-Bold',
-  light: 'Roboto-Light',
   borderRadius: 12,
 };

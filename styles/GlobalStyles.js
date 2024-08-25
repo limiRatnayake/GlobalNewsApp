@@ -13,7 +13,6 @@ const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.color.white,
   },
-
   button: {
     width: '100%',
     backgroundColor: theme.color.primary,
@@ -21,6 +20,11 @@ const globalStyles = StyleSheet.create({
     borderRadius: theme.borderRadius,
     alignItems: 'center',
     marginBottom: 10,
+    fontFamily: theme.fonts.semiBold,
+  },
+  buttonText: {
+    color: '#fff',
+    fontFamily: theme.fonts.semiBold,
   },
   input: {
     width: '100%',
@@ -30,11 +34,23 @@ const globalStyles = StyleSheet.create({
     borderRadius: theme.borderRadius,
     marginBottom: 15,
     backgroundColor: theme.color.white,
+    fontFamily: theme.fonts.regular,
   },
   divider: {
     height: 1,
     width: '100%',
     backgroundColor: theme.color.naturalGray,
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: theme.fonts.extraBold,
+    color: theme.color.black,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: theme.color.lightGray,
+    marginBottom: 20,
+    fontFamily: theme.fonts.regular,
   },
 });
 
