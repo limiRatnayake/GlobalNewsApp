@@ -37,7 +37,7 @@ const LoginScreenStyles = StyleSheet.create({
     color: '#000',
   },
   inputContainer: {
-    width: '100%', 
+    width: '100%',
   },
 
   forgotPasswordContainer: {
@@ -59,7 +59,7 @@ const LoginScreenStyles = StyleSheet.create({
   },
   registerText: {
     color: '#666',
-    marginRight: '2%'
+    marginRight: '2%',
   },
   registerLink: {
     color: '#007aff',
@@ -68,6 +68,7 @@ const LoginScreenStyles = StyleSheet.create({
   orText: {
     color: '#666',
     marginBottom: 10,
+    textAlign: 'center',
   },
   googleButton: {
     width: '100%',
@@ -77,9 +78,13 @@ const LoginScreenStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center'
   },
+  googleIcon: {width: 24, height: 24, marginRight: 10},
   googleButtonText: {
-    color: '#666',
+    color: theme.color.black,
+    fontFamily: theme.fonts.extraBold
   },
   divider: {marginVertical: 10},
 });

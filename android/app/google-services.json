@@ -12,7 +12,12 @@
           "package_name": "com.globalnewsapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "461150889136-ps02u0q83d2aea24bgm3rts45a299ajo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAM9vSu4DVSgDmpLR2uCNYqqmCtdEdHrZY"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461150889136-b557tp4u208daikqb67nujgqvgorbddr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

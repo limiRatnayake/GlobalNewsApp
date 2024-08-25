@@ -3,7 +3,7 @@ import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import styles from '../../styles/LoginScreenStyles';
 import globalStyles from '../../styles/GlobalStyles';
 import Divider from '../components/Divider';
-import {signInWithEmail} from '../services/auth';
+import {signInWithEmail, signInWithGoogle} from '../services/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {validateEmail, validatePassword} from '../utils/validation';
 
@@ -33,6 +33,20 @@ const LoginScreen = props => {
       console.log(userDetails, 'userDetails');
     } catch (error) {
       console.log('Login Error', error.message);
+      setShowErrorMessage({
+        reqFailed: 'Something went wrong. Please try again later!',
+      });
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+
+    console.log('toucghed');
+    
+    try {
+      let userDetails = await signInWithGoogle();
+      console.log(userDetails, 'userDetails');
+    } catch (error) { 
       setShowErrorMessage({
         reqFailed: 'Something went wrong. Please try again later!',
       });
@@ -95,11 +109,11 @@ const LoginScreen = props => {
               {showErrorMessage.password}
             </Text>
           ) : null}
-          <View style={styles.forgotPasswordContainer}>
+          {/* <View style={styles.forgotPasswordContainer}>
             <TouchableOpacity>
               <Text style={styles.forgotPasswordText}>Forgot password?</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           <TouchableOpacity
             style={globalStyles.button}
             onPress={() => handleEmailLogin()}>
@@ -116,7 +130,12 @@ const LoginScreen = props => {
           <Text style={styles.orText}>Or continue with</Text>
           <TouchableOpacity
             style={styles.googleButton}
-            onPress={() => props.navigation.navigate('SignUp')}>
+            onPress={() => handleGoogleSignIn()}>
+            <Image
+              style={styles.googleIcon}
+              source={require('../../assets/icons/googleIcon.png')}
+              alt="Google icon"
+            />
             <Text style={styles.googleButtonText}>Sign In With Google</Text>
           </TouchableOpacity>
         </View>

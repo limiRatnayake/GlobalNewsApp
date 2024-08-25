@@ -4,7 +4,7 @@ import { signOut } from '../services/auth';
 
 const HomeScreen = () => {
   useEffect(() => {
-    signZOut();
+    // signZOut();
   }, []);
 
   const signZOut = async () => {
