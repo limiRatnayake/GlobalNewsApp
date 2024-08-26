@@ -13,7 +13,7 @@ const apiClient = axios.create({
 });
 
 // Function to fetch top headlines
-export const fetchTopHeadlines = async ( ) => {
+export const fetchTopHeadlines = async () => {
   try {
     const response = await apiClient.get(
       `/top-headlines?sources=techcrunch&pageSize=10&apiKey=${API_KEY}`,
@@ -34,7 +34,7 @@ export const fetchLatestNewsArticles = async (q, from, sortBy) => {
     );
     return response.data.articles;
   } catch (error) {
-    console.error('Error fetching news articles:', error); 
+    console.error('Error fetching news articles:', error);
   }
 };
 
@@ -49,10 +49,39 @@ export const searchNews = async keyword => {
   }
 };
 
-// Function to fetch news by category
-export const fetchNewsByCategory = async category => {
+//  fetch news to get categories
+export const fetchNewsBySources = async category => {
   try {
-    const response = await apiClient.get(`/top-headlines?category=${category}`);
+    const response = await apiClient.get(
+      `/top-headlines/sources?country=us&apiKey=${API_KEY}`,
+    );
+
+    const sources = response.data.sources;
+
+    const uniqueCategories = [];
+
+    sources.forEach(source => {
+      if (!uniqueCategories.includes(source.category)) {
+        uniqueCategories.push(source.category);
+      }
+    });
+
+    return uniqueCategories;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
+};
+
+// fetch news by category
+export const fetchNewsByCategory = async category => {
+  console.log(category, 'category');
+
+  try {
+    const response = await apiClient.get(
+      `/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`,
+    );
+
     return response.data.articles;
   } catch (error) {
     console.error('Error fetching news by category:', error);

@@ -18,40 +18,6 @@ const HomeScreen = props => {
     // signZOut();
   }, []);
 
-  const renderBreakingNewsItem = ({item, index}) => {
-    return (
-      <TouchableOpacity
-        onPress={() =>
-          props.navigation.navigate('ArticleView', {
-            params: {
-              item: item,
-            },
-          })
-        }>
-        <BreakingNewsCard item={item} index={index} />
-      </TouchableOpacity>
-    );
-  };
-
-  const renderRecommendedNewsItem = ({item, index}) => (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() =>
-        props.navigation.navigate('ArticleView', { 
-        item: item
-        })
-      }>
-      <NewsCard
-        index={index}
-        title={item.title}
-        isHorizontal={false}
-        userProfile={item.author}
-        timestamp={item.publishedAt}
-        category={item.category}
-      />
-    </TouchableOpacity>
-  );
-
   const getTopHeadings = async () => {
     try {
       let topHeadings = await fetchTopHeadlines();
@@ -87,6 +53,43 @@ const HomeScreen = props => {
     }
   };
 
+    const renderBreakingNewsItem = ({item, index}) => {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={() =>
+            props.navigation.navigate('ArticleView', {
+              params: {
+                item: item,
+              },
+            })
+          }>
+          <BreakingNewsCard item={item} index={index} />
+        </TouchableOpacity>
+      );
+    };
+
+    const renderRecommendedNewsItem = ({item, index}) => (
+      <TouchableOpacity
+        key={index}
+        activeOpacity={1}
+        onPress={() =>
+          props.navigation.navigate('ArticleView', {
+            item: item,
+          })
+        }>
+        <NewsCard
+          index={index}
+          title={item.title}
+          isHorizontal={false}
+          userProfile={item.author}
+          timestamp={item.publishedAt}
+          category={item.category}
+        />
+      </TouchableOpacity>
+    );
+
+    
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -119,7 +122,7 @@ const HomeScreen = props => {
           <FlatList
             data={topHeading}
             renderItem={(item, index) => renderBreakingNewsItem(item, index)}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => index}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
@@ -135,7 +138,7 @@ const HomeScreen = props => {
       <FlatList
         data={recommendedArticles}
         renderItem={(item, index) => renderRecommendedNewsItem(item, index)}
-        keyExtractor={item => item.id}
+        keyExtractor={(item, index) => index}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.verticalList}
       />
