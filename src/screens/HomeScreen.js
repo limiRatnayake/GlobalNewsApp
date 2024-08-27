@@ -1,16 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 import {signOut} from '../services/auth';
 import NewsCard from '../components/NewsCard';
 import BreakingNewsCard from '../components/BreakingNewsCard';
 import styles from '../../styles/HomeScreen';
 import {fetchLatestNewsArticles, fetchTopHeadlines} from '../services/news';
+import { TextInput } from 'react-native';
+import SortingButton from '../components/SortingButton';
+import SearchBar from '../components/SearchBar';
+import SortOptionsModal from '../components/SortOptionModal';
 
 const HomeScreen = props => {
   const [topHeading, setTopHeadings] = useState([]);
   const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+    const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     getTopHeadings();
@@ -89,7 +95,14 @@ const HomeScreen = props => {
       </TouchableOpacity>
     );
 
-    
+    const handleOpenModal = () => {
+      setModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+      setModalVisible(false);
+    };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -101,17 +114,31 @@ const HomeScreen = props => {
             />
           </TouchableOpacity>
           <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Icon name="search" size={30} style={styles.icon} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity>
               <Icon name="notifications-none" size={30} style={styles.icon} />
             </TouchableOpacity>
           </View>
         </View>
       </View>
+      <View style={styles.containerRow}>
+        <Text style={styles.heading}>Latest News</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 20,
+          height: 50,
+        }}>
+        <SearchBar />
+        <SortingButton onPress={handleOpenModal} />
+      </View>
 
-      {topHeading.length > 0 && (
+      {/* {topHeading.length > 0 && (
         <>
           <View style={styles.containerRow}>
             <Text style={styles.heading}>Breaking News</Text>
@@ -128,13 +155,13 @@ const HomeScreen = props => {
             contentContainerStyle={styles.horizontalList}
           />
         </>
-      )}
-      <View style={styles.containerRow}>
+      )} */}
+      {/* <View style={styles.containerRow}>
         <Text style={styles.subHeading}>Recommended for you</Text>
         <TouchableOpacity>
           <Text style={styles.extraHeading}>Show more</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <FlatList
         data={recommendedArticles}
         renderItem={(item, index) => renderRecommendedNewsItem(item, index)}
@@ -142,6 +169,7 @@ const HomeScreen = props => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.verticalList}
       />
+      <SortOptionsModal visible={isModalVisible} onClose={handleCloseModal} />
     </View>
   );
 };
