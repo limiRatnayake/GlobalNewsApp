@@ -49,8 +49,7 @@ const DiscoverScreen = (props) => {
     getArticlesByCategory(category);
   };
 
-  const renderRecommendedNewsItem = ({item, index}) => {
-    console.log(item, 'renderRecommendedNewsItem');
+  const renderRecommendedNewsItem = ({item, index}) => { 
 
     return (
       <TouchableOpacity

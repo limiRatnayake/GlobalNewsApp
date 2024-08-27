@@ -10,6 +10,7 @@ const NewsCard = ({
   userProfile,
   timestamp,
   category,
+  urlToImage,
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
@@ -19,7 +20,15 @@ const NewsCard = ({
 
   return (
     <View key={index} style={[styles.card, styles.verticalCard]}>
-      {/* <Image source={{uri: userProfile}} style={styles.userProfile} /> */}
+      {urlToImage ? (
+        <View style={styles.imageContainer}>
+          <Image
+            resizeMode="cover"
+            source={{uri: urlToImage}}
+            style={styles.image}
+          />
+        </View>
+      ) : null}
       <View style={styles.textContainer}>
         <View style={styles.header}>
           <View>
@@ -65,14 +74,14 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    // backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
   },
   image: {
-    width: 80,
-    height: 83,
+    width: 90,
+    height: 100,
     borderRadius: 12,
   },
   textContainer: {
@@ -86,8 +95,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   userProfile: {
-    width: 30,
-    height: 30,
+    // width: 50,
+    // height: 50,
     borderRadius: 15,
     marginRight: 10,
   },

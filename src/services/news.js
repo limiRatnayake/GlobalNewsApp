@@ -1,14 +1,15 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://newsapi.org/v2';
-const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
+// const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
+const API_KEY = '9b4f0227b89d44a99e651deab9e955be8';
 
 // Configure axios instance
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${API_KEY}`,
+    Authorization: '9b4f0227b89d44a99ee651eab9e955be8',
   },
 });
 
@@ -16,7 +17,7 @@ const apiClient = axios.create({
 export const fetchTopHeadlines = async () => {
   try {
     const response = await apiClient.get(
-      `/top-headlines?sources=techcrunch&pageSize=10&apiKey=${API_KEY}`,
+      `/top-headlines?sources=techcrunch&pageSize=10`,
     );
     console.log(response.data.length);
 
@@ -28,10 +29,14 @@ export const fetchTopHeadlines = async () => {
 };
 
 export const fetchLatestNewsArticles = async (q, from, sortBy) => {
+  console.log(sortBy, 'fetchLatestNewsArticles');
+  const query = q ? q : 'news';
   try {
     const response = await apiClient.get(
-      `/top-headlines?language=en&apiKey=${API_KEY}`,
+      `/everything?q=${query}&sortBy=${sortBy}`,
     );
+    console.log(`/everything?q=${q}&sortBy=${sortBy}`, 'response');
+    
     return response.data.articles;
   } catch (error) {
     console.error('Error fetching news articles:', error);
@@ -53,7 +58,7 @@ export const searchNews = async keyword => {
 export const fetchNewsBySources = async category => {
   try {
     const response = await apiClient.get(
-      `/top-headlines/sources?country=us&apiKey=${API_KEY}`,
+      `/top-headlines/sources?country=us`,
     );
 
     const sources = response.data.sources;
@@ -79,7 +84,7 @@ export const fetchNewsByCategory = async category => {
 
   try {
     const response = await apiClient.get(
-      `/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`,
+      `/top-headlines?country=us&category=${category}`,
     );
 
     return response.data.articles;

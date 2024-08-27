@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/Ionicons';
@@ -7,7 +7,7 @@ import NewsCard from '../components/NewsCard';
 import BreakingNewsCard from '../components/BreakingNewsCard';
 import styles from '../../styles/HomeScreen';
 import {fetchLatestNewsArticles, fetchTopHeadlines} from '../services/news';
-import { TextInput } from 'react-native';
+import {TextInput} from 'react-native';
 import SortingButton from '../components/SortingButton';
 import SearchBar from '../components/SearchBar';
 import SortOptionsModal from '../components/SortOptionModal';
@@ -16,13 +16,19 @@ const HomeScreen = props => {
   const [topHeading, setTopHeadings] = useState([]);
   const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-    const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [callNewsArticles, setCallNewsArticles] = useState(false);
 
   useEffect(() => {
     getTopHeadings();
     getNewArticles();
     // signZOut();
   }, []);
+
+  useEffect(() => {
+    callNewsArticles && getNewArticles();
+  }, [selectedOption]);
 
   const getTopHeadings = async () => {
     try {
@@ -35,20 +41,33 @@ const HomeScreen = props => {
     }
   };
 
-  const getNewArticles = async () => {
+  const getNewArticles = useCallback(async () => {
     try {
-      let newArticles = await fetchLatestNewsArticles(
-        (q = ''),
-        (from = ''),
-        (sortBy = 'popularity'),
-      );
+      let newArticles = await fetchLatestNewsArticles('', '', selectedOption);
       console.log('newArticles', newArticles);
       setRecommendedArticles(newArticles);
+      setCallNewsArticles(false);
     } catch (error) {
       console.log('newsTopHeading Error', error.message);
       setTopHeadings([]);
+      setCallNewsArticles(false);
     }
-  };
+  }, [selectedOption]);
+
+  // const getNewArticles = async () => {
+  //   try {
+  //     let newArticles = await fetchLatestNewsArticles(
+  //       (q = 'apple'),
+  //       (from = ''),
+  //       (sortBy = selectedOption),
+  //     );
+  //     console.log('newArticles', newArticles);
+  //     setRecommendedArticles(newArticles);
+  //   } catch (error) {
+  //     console.log('newsTopHeading Error', error.message);
+  //     setTopHeadings([]);
+  //   }
+  // };
 
   const signZOut = async () => {
     try {
@@ -59,49 +78,55 @@ const HomeScreen = props => {
     }
   };
 
-    const renderBreakingNewsItem = ({item, index}) => {
-      return (
-        <TouchableOpacity
-          key={index}
-          onPress={() =>
-            props.navigation.navigate('ArticleView', {
-              params: {
-                item: item,
-              },
-            })
-          }>
-          <BreakingNewsCard item={item} index={index} />
-        </TouchableOpacity>
-      );
-    };
-
-    const renderRecommendedNewsItem = ({item, index}) => (
+  const renderBreakingNewsItem = ({item, index}) => {
+    return (
       <TouchableOpacity
         key={index}
-        activeOpacity={1}
         onPress={() =>
           props.navigation.navigate('ArticleView', {
-            item: item,
+            params: {
+              item: item,
+            },
           })
         }>
-        <NewsCard
-          index={index}
-          title={item.title}
-          isHorizontal={false}
-          userProfile={item.author}
-          timestamp={item.publishedAt}
-          category={item.category}
-        />
+        <BreakingNewsCard item={item} index={index} />
       </TouchableOpacity>
     );
+  };
 
-    const handleOpenModal = () => {
-      setModalVisible(true);
-    };
+  const renderRecommendedNewsItem = ({item, index}) => (
+    <TouchableOpacity
+      key={index}
+      activeOpacity={1}
+      onPress={() =>
+        props.navigation.navigate('ArticleView', {
+          item: item,
+        })
+      }>
+      <NewsCard
+        index={index}
+        title={item.title}
+        isHorizontal={false}
+        userProfile={item.author}
+        timestamp={item.publishedAt}
+        category={item.category}
+        urlToImage={item.urlToImage}
+      />
+    </TouchableOpacity>
+  );
 
-    const handleCloseModal = () => {
-      setModalVisible(false);
-    };
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleOptionSelect = option => {
+    setSelectedOption(option);
+    setCallNewsArticles(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -169,7 +194,11 @@ const HomeScreen = props => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.verticalList}
       />
-      <SortOptionsModal visible={isModalVisible} onClose={handleCloseModal} />
+      <SortOptionsModal
+        visible={isModalVisible}
+        onClose={handleCloseModal}
+        onSelectOption={handleOptionSelect}
+      />
     </View>
   );
 };
