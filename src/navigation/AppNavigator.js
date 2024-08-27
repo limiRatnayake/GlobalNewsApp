@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import MainNavigator from './MainNavigator';
 import AuthNavigator from './AuthNavigator';
 import auth from '@react-native-firebase/auth';
+import BootSplash from 'react-native-bootsplash';
 
 const AppNavigator = () => {
   const [user, setUser] = useState(null);
@@ -28,7 +29,7 @@ const AppNavigator = () => {
   };
 
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={() => BootSplash.hide({fade: true})}>
       {user ? <MainNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
