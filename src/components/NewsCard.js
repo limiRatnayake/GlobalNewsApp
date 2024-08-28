@@ -1,7 +1,9 @@
 import moment from 'moment';
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
+import {generateUniqueId} from '../utils/uniqueArticleId';
 
 const NewsCard = ({
   index,
@@ -11,11 +13,39 @@ const NewsCard = ({
   timestamp,
   category,
   urlToImage,
+  article,
+  articleIdNo,
+  callBack,
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  
+  const articleId = articleIdNo == '' ? generateUniqueId(article) : articleIdNo;
 
-  const toggleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
+  useEffect(() => { 
+    const checkBookmarkStatus = async () => {
+      if (articleId) {
+        const bookmarked = await checkIsBookmarked(articleId); 
+        setIsBookmarked(bookmarked);
+      }
+    };
+    checkBookmarkStatus();
+  }, [articleId]);
+
+  const toggleBookmark = async () => {
+    if (isBookmarked) {
+      await removeBookmark(articleId);
+      setIsBookmarked(false);
+      callBack(true);
+    } else {
+      await addBookmark({
+        articleId,
+        title,
+        timestamp,
+        userProfile,
+        urlToImage,
+      });
+      setIsBookmarked(true);
+    }
   };
 
   return (
@@ -43,13 +73,15 @@ const NewsCard = ({
         <Text style={styles.title} numberOfLines={2}>
           {title}
         </Text>
-        <View style={styles.footer}>
-          <Icon
-            name={isBookmarked ? 'bookmark' : 'bookmark-border'}
-            size={24}
-            color="black"
-          />
-        </View>
+        <TouchableOpacity onPress={() => toggleBookmark()}>
+          <View style={styles.footer}>
+            <Icon
+              name={isBookmarked ? 'bookmark' : 'bookmark-border'}
+              size={24}
+              color="black"
+            />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

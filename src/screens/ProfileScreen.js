@@ -28,7 +28,7 @@ const ProfileScreen = props => {
     reqFailed: '',
   });
   const [successMessage, setSuccessMessage] = useState('');
-  const userName = 'Lucas Scott';
+  
 
   useEffect(() => {
     getUserDetails();
@@ -101,8 +101,8 @@ const ProfileScreen = props => {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
-          <ProfileImage identifier={userName} size={80} />
-          <Text style={styles.profileName}>{userName}</Text>
+          <ProfileImage identifier={name} size={80} />
+          <Text style={styles.profileName}>{name}</Text>
         </View>
 
         <View style={styles.formContainer}>

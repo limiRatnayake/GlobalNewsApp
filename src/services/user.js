@@ -45,10 +45,10 @@ export const updateUserData = async user => {
         {merge: true},
       );
     }
-    return 'Successfully update your information!'
+    return 'Successfully update your information!';
   } catch (error) {
     console.error('Error updating user data:', error);
-    throw error
+    throw error;
   }
 };
 
@@ -68,5 +68,97 @@ export const getUserProfile = async () => {
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return null;
+  }
+};
+
+//add booking
+export const addBookmark = async article => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+
+  try {
+    const bookmarkRef = firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('bookmarks')
+      .doc(article.articleId);
+
+    await bookmarkRef.set({
+      ...article,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
+    console.log('Bookmark added successfully', article);
+  } catch (error) {
+    console.log('Error adding bookmark:', error, article);
+  }
+};
+
+// remove a bookmark for a user
+export const removeBookmark = async articleId => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+
+  try {
+    const bookmarkRef = firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('bookmarks')
+      .doc(articleId);
+
+    await bookmarkRef.delete();
+    console.log('Bookmark removed successfully');
+  } catch (error) {
+    console.error('Error removing bookmark:', error);
+  }
+};
+
+// check if an article is bookmarked
+export const checkIsBookmarked = async articleIdNew => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+  try {
+    const bookmarkRef = firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('bookmarks')
+      .doc(articleIdNew);
+
+    const doc = await bookmarkRef.get(); 
+
+    return doc.exists;
+  } catch (error) {
+    console.log('Error checking bookmark status:', error);
+    return false;
+  }
+};
+
+// get bookmarks for the current user
+export const getBookmarks = async () => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
+
+  try {
+    const snapshot = await firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('bookmarks')
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    return snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+  } catch (error) {
+    console.error('Error fetching bookmarks:', error);
+    return [];
   }
 };

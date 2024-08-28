@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://newsapi.org/v23';
+const BASE_URL = 'https://newsapi.org/v2';
 // const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
-const API_KEY = '9b4f0227b89d44a99e651deab9e955be8';
+const API_KEY = '9b4f0227b89d44a99e651eab9e955be8';
 
 // Configure axios instance
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: '9b4f0227b89d44a99ee651eab9e955be8',
+    Authorization: '9b4f0227b89d44a99e651eab9e955be8',
   },
 });
 
@@ -33,7 +33,7 @@ export const fetchLatestNewsArticles = async (q, from, sortBy) => {
   const query = q ? q : 'news';
   try {
     const response = await apiClient.get(
-      `/everything?q=${query}&sortBy=${sortBy}`,
+      `/everything?pageSize=10&q=${query}&sortBy=${sortBy}`,
     );
     console.log(`/everything?q=${q}&sortBy=${sortBy}`, 'response');
     
@@ -58,7 +58,7 @@ export const searchNews = async keyword => {
 export const fetchNewsBySources = async category => {
   try {
     const response = await apiClient.get(
-      `/top-headlines/sources?country=us`,
+      `/top-headlines/sources?country=us&pageSize=10`,
     );
 
     const sources = response.data.sources;
@@ -84,7 +84,7 @@ export const fetchNewsByCategory = async category => {
 
   try {
     const response = await apiClient.get(
-      `/top-headlines?country=us&category=${category}`,
+      `/top-headlines?country=us&category=${category}&pageSize=10`,
     );
 
     return response.data.articles;

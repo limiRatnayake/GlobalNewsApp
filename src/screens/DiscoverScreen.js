@@ -7,24 +7,35 @@ import globalStyles from '../../styles/GlobalStyles';
 import {fetchNewsBySources, fetchNewsByCategory} from '../services/news';
 import {useDispatch, useSelector} from 'react-redux';
 import {addCategoryList} from '../store/actions/categoryAction';
+import {useIsFocused} from '@react-navigation/native';
 const categories = ['All News', 'Sports', 'Technology', 'Business'];
-const DiscoverScreen = (props) => {
+const DiscoverScreen = props => {
   const [newsByCategory, setNewsByCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(0);
+  const [refreshItems, setRefreshItems] = useState(false);
   const {categoryList} = useSelector(state => state.category);
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getNewsByCategory();
-  }, []);
+    if (isFocused || refreshItems) {
+      getNewsByCategory();
+      setRefreshItems(false);
+      setNewsByCategory([]);
+    }
+  }, [isFocused, refreshItems]);
 
   const getNewsByCategory = async () => {
     try {
       let topHeadlinesByCategory = await fetchNewsBySources();
       dispatch(addCategoryList(topHeadlinesByCategory));
-      console.log(topHeadlinesByCategory[0] , categoryList, 'topHeadlinesByCategory');
+      console.log(
+        topHeadlinesByCategory[0],
+        categoryList,
+        'topHeadlinesByCategory',
+      );
 
-      getArticlesByCategory(topHeadlinesByCategory[0]);  
+      getArticlesByCategory(topHeadlinesByCategory[0]);
     } catch (error) {
       console.log('getNewsByCategory Error', error.message);
       dispatch(addCategoryList([]));
@@ -49,8 +60,7 @@ const DiscoverScreen = (props) => {
     getArticlesByCategory(category);
   };
 
-  const renderRecommendedNewsItem = ({item, index}) => { 
-
+  const renderRecommendedNewsItem = ({item, index}) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -66,6 +76,10 @@ const DiscoverScreen = (props) => {
           userProfile={item.author}
           timestamp={item.publishedAt}
           category={item.category}
+          urlToImage={item.urlToImage}
+          article={item}
+          articleIdNo={''}
+          callBack={setRefreshItems}
         />
       </TouchableOpacity>
     );
