@@ -73,7 +73,7 @@ const SignUpScreen = props => {
         password: '',
         confirmPassword: '',
         terms: ' ',
-        reqFailed: 'Something went wrong. Please try again later!',
+        reqFailed: error ? error :'Something went wrong. Please try again later!',
       });
     }
   };

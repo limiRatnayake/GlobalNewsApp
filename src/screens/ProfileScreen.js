@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -13,24 +13,26 @@ import ProfileImage from '../components/ProfileImage';
 import globalStyles from '../../styles/GlobalStyles';
 import theme from '../../styles/theme';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
-import { signOut } from '../services/auth';
+import {signOut} from '../services/auth';
+import {getUserProfile, saveUserData, updateUserData} from '../services/user';
+import {validateEmail, validateName} from '../utils/validation';
 
-const ProfileScreen = (props) => {
+const ProfileScreen = props => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState({
     name: '',
     email: '',
-    password: '',
-    confirmPassword: '',
-    terms: '',
     reqFailed: '',
   });
+  const [successMessage, setSuccessMessage] = useState('');
   const userName = 'Lucas Scott';
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
 
   const logoutUser = async () => {
     try {
@@ -38,6 +40,51 @@ const ProfileScreen = (props) => {
       console.log('signOut');
     } catch (error) {
       console.log('Login Error', error.message);
+    }
+  };
+
+  const getUserDetails = async () => {
+    try {
+      let userProfile = await getUserProfile();
+      console.log('userDetails: ', userProfile);
+      if (userProfile) {
+        setName(userProfile.name || '');
+        setEmail(userProfile.email || '');
+      }
+    } catch (error) {
+      console.log('get user details Error', error.message);
+    }
+  };
+
+  const saveUserDetails = async () => {
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    if (nameError || emailError) {
+      setShowErrorMessage({
+        name: nameError,
+        email: emailError,
+      });
+      return;
+    }
+    let user = {
+      email: email,
+      name: name,
+    };
+    try {
+      let data = await updateUserData(user);
+      console.log('saveUserDetails: ', data);
+      getUserDetails();
+      setSuccessMessage(data);
+      setShowErrorMessage({});
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+    } catch (error) {
+      console.log('save User Details Error', error);
+       setSuccessMessage('');
+      setShowErrorMessage({
+        reqFailed: 'Something went wrong. Please try again later!',
+      });
     }
   };
 
@@ -67,6 +114,7 @@ const ProfileScreen = (props) => {
                   ? globalStyles.inputError
                   : globalStyles.input,
               ]}
+              value={name}
               placeholder="Enter your name"
               onChangeText={text => {
                 setName(text);
@@ -88,6 +136,7 @@ const ProfileScreen = (props) => {
                   ? globalStyles.inputError
                   : globalStyles.input,
               ]}
+              value={email}
               placeholder="name@email.com"
               keyboardType="email-address"
               onChangeText={text => {
@@ -102,7 +151,7 @@ const ProfileScreen = (props) => {
             ) : null}
           </View>
 
-          <View style={styles.inputWrapper}>
+          {/* <View style={styles.inputWrapper}>
             <Text style={styles.label}>Password</Text>
             <View
               style={[
@@ -132,12 +181,19 @@ const ProfileScreen = (props) => {
                 {showErrorMessage.password}
               </Text>
             ) : null}
-          </View>
+          </View> */}
         </View>
-
+        {showErrorMessage.reqFailed && (
+          <Text style={globalStyles.errorMessage}>
+            {showErrorMessage.reqFailed}
+          </Text>
+        )}
+        {successMessage && (
+          <Text style={globalStyles.successMessage}>{successMessage}</Text>
+        )}
         <TouchableOpacity
           style={globalStyles.buttonWithBorder}
-          onPress={() => {}}>
+          onPress={() => saveUserDetails()}>
           <Text style={globalStyles.buttonWithBorderText}>Save Changes</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -159,7 +215,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,

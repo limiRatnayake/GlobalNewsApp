@@ -34,19 +34,20 @@ const LoginScreen = props => {
     } catch (error) {
       console.log('Login Error', error.message);
       setShowErrorMessage({
-        reqFailed: 'Something went wrong. Please try again later!',
+        reqFailed: error.message
+          ? error.message
+          : 'Something went wrong. Please try again later!',
       });
     }
   };
 
   const handleGoogleSignIn = async () => {
-
     console.log('toucghed');
-    
+
     try {
       let userDetails = await signInWithGoogle();
       console.log(userDetails, 'userDetails');
-    } catch (error) { 
+    } catch (error) {
       setShowErrorMessage({
         reqFailed: 'Something went wrong. Please try again later!',
       });
@@ -104,9 +105,11 @@ const LoginScreen = props => {
               <Icon name={!passwordVisible ? 'eye-slash' : 'eye'} size={24} />
             </TouchableOpacity>
           </View>
-          {showErrorMessage.password ? (
+          {showErrorMessage.password || showErrorMessage.reqFailed ? (
             <Text style={globalStyles.errorMessage}>
-              {showErrorMessage.password}
+              {showErrorMessage.password
+                ? showErrorMessage.password
+                : showErrorMessage.reqFailed}
             </Text>
           ) : null}
           {/* <View style={styles.forgotPasswordContainer}>

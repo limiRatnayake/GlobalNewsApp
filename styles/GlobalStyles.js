@@ -34,7 +34,7 @@ const globalStyles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     fontFamily: theme.fonts.semiBold,
-    borderWidth: 1
+    borderWidth: 1,
   },
   buttonWithBorderText: {
     color: theme.color.primary,
@@ -104,6 +104,10 @@ const globalStyles = StyleSheet.create({
   errorMessage: {
     marginBottom: 15,
     color: theme.color.error,
+  },
+  successMessage: {
+    marginBottom: 15,
+    color: theme.color.success,
   },
 });
 
