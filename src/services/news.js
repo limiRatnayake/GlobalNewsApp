@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://newsapi.org/v2';
+const BASE_URL = 'https://newsapi.org/v23';
 // const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
 const API_KEY = '9b4f0227b89d44a99e651deab9e955be8';
 

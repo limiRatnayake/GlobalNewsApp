@@ -5,12 +5,13 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import {signOut} from '../services/auth';
 import NewsCard from '../components/NewsCard';
 import BreakingNewsCard from '../components/BreakingNewsCard';
-import styles from '../../styles/HomeScreen';
+import styles from '../../styles/HomeScreenStyles';
 import {fetchLatestNewsArticles, fetchTopHeadlines} from '../services/news';
 import {TextInput} from 'react-native';
 import SortingButton from '../components/SortingButton';
 import SearchBar from '../components/SearchBar';
 import SortOptionsModal from '../components/SortOptionModal';
+import ProfileImage from '../components/ProfileImage';
 
 const HomeScreen = props => {
   const [topHeading, setTopHeadings] = useState([]);
@@ -23,7 +24,6 @@ const HomeScreen = props => {
   useEffect(() => {
     getTopHeadings();
     getNewArticles();
-    // signZOut();
   }, []);
 
   useEffect(() => {
@@ -68,15 +68,6 @@ const HomeScreen = props => {
   //     setTopHeadings([]);
   //   }
   // };
-
-  const signZOut = async () => {
-    try {
-      let userDetails = await signOut();
-      console.log('signOut');
-    } catch (error) {
-      console.log('Login Error', error.message);
-    }
-  };
 
   const renderBreakingNewsItem = ({item, index}) => {
     return (
@@ -132,11 +123,9 @@ const HomeScreen = props => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.iconContainer}>
-          <TouchableOpacity>
-            <Image
-              source={{uri: 'https://via.placeholder.com/30'}}
-              style={styles.profileIcon}
-            />
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('ProfileView')}>
+            <ProfileImage identifier={'Lucas Scott'} size={50} />
           </TouchableOpacity>
           <View style={{flexDirection: 'row'}}>
             {/* <TouchableOpacity>

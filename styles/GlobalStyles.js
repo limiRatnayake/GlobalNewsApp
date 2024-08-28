@@ -26,6 +26,20 @@ const globalStyles = StyleSheet.create({
     color: '#fff',
     fontFamily: theme.fonts.semiBold,
   },
+  buttonWithBorder: {
+    width: '100%',
+    borderColor: theme.color.primary,
+    paddingVertical: 15,
+    borderRadius: theme.borderRadius,
+    alignItems: 'center',
+    marginBottom: 10,
+    fontFamily: theme.fonts.semiBold,
+    borderWidth: 1
+  },
+  buttonWithBorderText: {
+    color: theme.color.primary,
+    fontFamily: theme.fonts.semiBold,
+  },
   input: {
     width: '100%',
     padding: 10,
@@ -56,8 +70,8 @@ const globalStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 1, 
-    borderRadius: theme.borderRadius, 
+    borderWidth: 1,
+    borderRadius: theme.borderRadius,
     backgroundColor: theme.color.white,
     paddingHorizontal: 10,
     borderColor: theme.color.error,

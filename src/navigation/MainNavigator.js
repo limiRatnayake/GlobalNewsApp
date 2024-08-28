@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from '../../styles/theme';
 import ArticleScreen from '../screens/ArticleScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -48,6 +49,7 @@ function MainNavigator() {
         options={{headerShown: false}}
       />
       <Stack.Screen name="ArticleView" component={ArticleScreen} />
+      <Stack.Screen name="ProfileView" component={ProfileScreen} />
     </Stack.Navigator>
   );
 }

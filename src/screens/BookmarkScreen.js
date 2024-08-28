@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
 import NewsCard from '../components/NewsCard';
-import styles from '../../styles/HomeScreen'; 
+import styles from '../../styles/HomeScreenStyles'; 
 import globalStyles from '../../styles/GlobalStyles';
 
 const BookmarkScreen = () => {
