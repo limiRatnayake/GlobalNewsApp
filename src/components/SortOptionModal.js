@@ -22,12 +22,21 @@ const SortOptionsModal = ({visible, onClose, onSelectOption}) => {
         <View style={styles.modalContent}>
           <View style={styles.modalTitleContainer}>
             <Text style={styles.modalTitle}>Sort</Text>
+
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => handleOptionSelect('')}>
-              <Text style={styles.subModalTitle}>Clear</Text>
+              <Icon name="close" size={20} color={theme.color.primary} />
             </TouchableOpacity>
           </View>
+          {selectedOption && (
+            <TouchableOpacity
+              // activeOpacity={1}
+              style={{alignItems: 'flex-end'}}
+              onPress={() => handleOptionSelect('')}>
+              <Text style={styles.subModalTitle}>Clear sorting</Text>
+            </TouchableOpacity>
+          )}
           {options.map(option => (
             <TouchableOpacity
               key={option}
@@ -35,7 +44,7 @@ const SortOptionsModal = ({visible, onClose, onSelectOption}) => {
               onPress={() => handleOptionSelect(option)}>
               <Text style={styles.optionText}>{option}</Text>
               {selectedOption === option && (
-                <Icon name="checkmark" size={20} color="blue" />
+                <Icon name="checkmark" size={20} color={theme.color.primary} />
               )}
             </TouchableOpacity>
           ))}
@@ -72,18 +81,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 20,
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: theme.fonts.bold,
-    color: theme.color.primary,
-    marginBottom: 20,
+    color: theme.color.primary, 
   },
   subModalTitle: {
     fontSize: 16,
     fontWeight: theme.fonts.bold,
-    color: theme.color.primary,
-    marginBottom: 20,
+    color: theme.color.accent,
+    marginVertical: 10,  
   },
   optionContainer: {
     flexDirection: 'row',

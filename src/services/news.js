@@ -35,7 +35,7 @@ export const fetchLatestNewsArticles = async (q, from, sortBy) => {
     const response = await apiClient.get(
       `/everything?pageSize=10&q=${query}&sortBy=${sortBy}`,
     );
-    console.log(`/everything?q=${q}&sortBy=${sortBy}`, 'response');
+    console.log(`/everything?q=${q}&sortBy=${sortBy}`, response.data.articles, 'response');
     
     return response.data.articles;
   } catch (error) {
@@ -45,13 +45,15 @@ export const fetchLatestNewsArticles = async (q, from, sortBy) => {
 
 // Function to search news articles by keyword
 export const searchNews = async keyword => {
-  try {
-    const response = await apiClient.get(`/everything?q=${keyword}`);
-    return response.data.articles;
-  } catch (error) {
-    console.error('Error searching news:', error);
-    throw error;
-  }
+  console.log('called', keyword);
+  
+  // try {
+  //   const response = await apiClient.get(`/everything?q=${keyword}`);
+  //   return response.data.articles;
+  // } catch (error) {
+  //   console.error('Error searching news:', error);
+  //   throw error;
+  // }
 };
 
 //  fetch news to get categories
