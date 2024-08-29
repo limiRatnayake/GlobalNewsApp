@@ -3,6 +3,7 @@ import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
 import { getTotalNotificationCount } from '../store/actions/notificationAction'; 
 import store from '../store/store';
+import { notificationService } from './pushNotification';
  
 // Request user permission for notifications
 export async function requestUserPermission() {
@@ -37,6 +38,10 @@ async function storeNotification(notification) {
     notifications.push(notification);
     store.dispatch(getTotalNotificationCount(notifications.length))
     await AsyncStorage.setItem('notifications', JSON.stringify(notifications));
+    notificationService.showNotification(
+      notification.title,
+      notification.message,
+    );
   } catch (error) {
     console.log('Failed to store notification:', error);
     return error
