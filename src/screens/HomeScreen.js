@@ -302,7 +302,8 @@ const HomeScreen = props => {
             {/* <TouchableOpacity>
               <Icon name="search" size={30} style={styles.icon} />
             </TouchableOpacity> */}
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('NotificationView')}>
               <Icon name="notifications-none" size={30} style={styles.icon} />
             </TouchableOpacity>
           </View>

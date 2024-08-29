@@ -1,4 +1,6 @@
 import axios from 'axios';
+import store from '../store/store';
+import { getTotalNotificationCount } from '../store/actions/notificationAction';
 
 const BASE_URL = 'https://newsapi.org/v2';
 // const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
@@ -32,6 +34,7 @@ export const fetchLatestNewsArticles = async (q, from, sortBy) => {
   console.log(sortBy, 'fetchLatestNewsArticles');
   const query = q ? q : 'news';
   try {
+     store.dispatch(getTotalNotificationCount(0));
     const response = await apiClient.get(
       `/everything?pageSize=10&q=${query}&sortBy=${sortBy}`,
     );

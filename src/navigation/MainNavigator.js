@@ -8,6 +8,7 @@ import theme from '../../styles/theme';
 import ArticleScreen from '../screens/ArticleScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ProfileScreen from '../screens/ProfileScreen';
+import NotificationScreen from '../screens/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -50,6 +51,7 @@ function MainNavigator() {
       />
       <Stack.Screen name="ArticleView" component={ArticleScreen} />
       <Stack.Screen name="ProfileView" component={ProfileScreen} />
+      <Stack.Screen name="NotificationView" component={NotificationScreen} />
     </Stack.Navigator>
   );
 }

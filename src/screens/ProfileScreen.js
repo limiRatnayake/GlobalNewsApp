@@ -90,11 +90,11 @@ const ProfileScreen = props => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={globalStyles.header}>
         <TouchableOpacity onPress={() => props.navigation.goBack()}>
           <Icon name="arrow-back" size={24} color={theme.color.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={globalStyles.headerTitle}>Settings</Text>
       </View>
 
       <ScrollView
@@ -212,16 +212,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: theme.padding.mainPadding,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    color: theme.color.black,
-    fontFamily: theme.fonts.semiBold,
-    marginLeft: 8,
   },
   scrollContainer: {
     flexGrow: 1,

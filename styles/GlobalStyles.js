@@ -109,6 +109,16 @@ const globalStyles = StyleSheet.create({
     marginBottom: 15,
     color: theme.color.success,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 18,
+    color: theme.color.black,
+    fontFamily: theme.fonts.semiBold,
+    marginLeft: 8,
+  },
 });
 
 export default globalStyles;
