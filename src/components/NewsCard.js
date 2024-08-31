@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
 import {generateUniqueId} from '../utils/uniqueArticleId';
+import theme from '../../styles/theme';
 
 const NewsCard = ({
   index,
@@ -78,7 +79,7 @@ const NewsCard = ({
             <Icon
               name={isBookmarked ? 'bookmark' : 'bookmark-border'}
               size={24}
-              color="black"
+              color={theme.color.primary}
             />
           </View>
         </TouchableOpacity>

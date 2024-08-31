@@ -1,18 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import NewsCard from '../components/NewsCard';
 import styles from '../../styles/HomeScreen';
 import globalStyles from '../../styles/GlobalStyles';
 import {getBookmarks} from '../services/user';
-import { useIsFocused } from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
+import theme from '../../styles/theme';
 
 const BookmarkScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [bookmarkedArticles, setBookmarkedArticles] = useState([]);
   const [refreshItems, setRefreshItems] = useState(false);
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    setIsLoading(true);
     if (isFocused || refreshItems) {
       const fetchBookmarks = async () => {
         const articles = await getBookmarks();
@@ -20,9 +31,12 @@ const BookmarkScreen = () => {
 
         setBookmarkedArticles(articles);
         setRefreshItems(false);
+        setIsLoading(false);
       };
 
       fetchBookmarks();
+    } else {
+      setIsLoading(false);
     }
   }, [isFocused, refreshItems]);
 
@@ -55,7 +69,9 @@ const BookmarkScreen = () => {
         <Text style={globalStyles.title}>Bookmarks</Text>
         <Text style={globalStyles.subtitle}>Your favourites </Text>
       </View>
-      {bookmarkedArticles.length > 0 ? (
+      {isLoading ? (
+        <ActivityIndicator size="large" color={theme.color.primary} />
+      ) : bookmarkedArticles.length > 0 ? (
         <FlatList
           data={bookmarkedArticles}
           renderItem={(item, index) => renderRecommendedNewsItem(item, index)}
@@ -71,7 +87,6 @@ const BookmarkScreen = () => {
 };
 
 const style2 = StyleSheet.create({
-  
   noBookmarksText: {
     fontSize: 16,
     color: '#888',
