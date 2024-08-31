@@ -90,25 +90,7 @@ const DiscoverScreen = props => {
       <View style={globalStyles.headerContainer}>
         <Text style={globalStyles.title}>Discover</Text>
         <Text style={globalStyles.subtitle}>News from around the world</Text>
-      </View>
-      {/* <View
-        style={{flexDirection: 'row', alignItems: 'center', marginBottom: 16}}>
-        <TextInput
-          placeholder="Search"
-          style={{
-            flex: 1,
-            height: 40,
-            borderColor: '#ccc',
-            borderWidth: 1,
-            borderRadius: 8,
-            paddingHorizontal: 10,
-            marginRight: 10,
-          }}
-        />
-        <TouchableOpacity>
-          <Icon name="filter-outline" size={28} />
-        </TouchableOpacity>
-      </View> */}
+      </View> 
       <View style={{flexGrow: 0}}>
         <FlatList
           data={categoryList}

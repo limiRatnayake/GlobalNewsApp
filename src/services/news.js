@@ -5,6 +5,7 @@ import { getTotalNotificationCount } from '../store/actions/notificationAction';
 const BASE_URL = 'https://newsapi.org/v2';
 // const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
 const API_KEY = '9b4f0227b89d44a99e651eab9e955be8';
+// const API_KEY = '9b4f0227b89d44a99e651eab9e955be8';
 
 // Configure axios instance
 const apiClient = axios.create({
@@ -30,16 +31,22 @@ export const fetchTopHeadlines = async () => {
   }
 };
 
-export const fetchLatestNewsArticles = async (q, from, sortBy) => {
+export const fetchLatestNewsArticles = async (q, sortBy, page = 1) => {
   console.log(sortBy, 'fetchLatestNewsArticles');
   const query = q ? q : 'news';
+  console.log(
+      `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,)
   try {
-     store.dispatch(getTotalNotificationCount(0));
+    store.dispatch(getTotalNotificationCount(0));
     const response = await apiClient.get(
-      `/everything?pageSize=10&q=${query}&sortBy=${sortBy}`,
+      `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,
     );
-    console.log(`/everything?q=${q}&sortBy=${sortBy}`, response.data.articles, 'response');
-    
+    console.log(
+      `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,
+      response.data.articles,
+      'response',
+    );
+
     return response.data.articles;
   } catch (error) {
     console.error('Error fetching news articles:', error);

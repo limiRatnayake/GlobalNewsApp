@@ -1,49 +1,31 @@
 import React, {useEffect, useState} from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import theme from '../../styles/theme';
-import {fetchLatestNewsArticles} from '../services/news';
+import theme from '../../styles/theme'; 
 
 const SearchBar = props => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
-  
+  const [searchQuery, setSearchQuery] = useState(''); 
+
   useEffect(() => {
     setSearchQuery('');
-    setDebouncedQuery('');
+    props.setDebouncedQuery('');
   }, [props.isFocused]);
-  
- 
+
   useEffect(() => {
     if (searchQuery.trim() !== '') {
       const handler = setTimeout(() => {
         console.log(searchQuery, 'searchQuery');
 
-        setDebouncedQuery(searchQuery);
+        props.setDebouncedQuery(searchQuery);
       }, 300);
 
       return () => {
         clearTimeout(handler);
       };
     } else {
-      setDebouncedQuery('');
+      props.setDebouncedQuery('');
     }
   }, [searchQuery]);
-
-  // debounce search query
-  useEffect(() => {
-    const fetchSearchResults = async query => {
-      let newArticles = await fetchLatestNewsArticles(
-        query,
-        '',
-        props.selectedOption,
-      ); 
-
-      props.setRecommendedArticles(newArticles);
-    };
-
-    fetchSearchResults(debouncedQuery);
-  }, [debouncedQuery]);
 
   return (
     <View style={styles.searchContainer}>
