@@ -134,8 +134,7 @@ export const checkIsBookmarked = async articleIdNew => {
       .collection('bookmarks')
       .doc(articleIdNew);
 
-    const doc = await bookmarkRef.get(); 
-    store.dispatch(setIsBookmarked(doc.exists));
+    const doc = await bookmarkRef.get();  
     return doc.exists;
   } catch (error) {
     console.log('Error checking bookmark status:', error);

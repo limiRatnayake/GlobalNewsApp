@@ -1,19 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const initialState = {
-  isBookmarked: false,
-};
+const initialState = {};
 
 const articleSlice = createSlice({
   name: 'article',
   initialState,
-  reducers: {
-    setIsBookmarked: (state, action) => {
-      state.isBookmarked = action.payload;
-    },
-  },
+  reducers: {},
 });
 
-export const {setIsBookmarked} = articleSlice.actions;
+export const {} = articleSlice.actions;
 
 export default articleSlice.reducer;

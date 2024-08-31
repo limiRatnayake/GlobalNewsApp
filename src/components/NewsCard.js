@@ -24,7 +24,7 @@ const NewsCard = ({
   const articleId = articleIdNo == '' ? generateUniqueId(article) : articleIdNo;
 
   useEffect(() => {
-    const checkBookmarkStatus = async () => {
+    const checkBookmarkStatus = async () => { 
       if (articleId) {
         const bookmarked = await checkIsBookmarked(articleId);
         setIsBookmarked(bookmarked);
@@ -33,13 +33,13 @@ const NewsCard = ({
     checkBookmarkStatus();
   }, [articleId]);
 
-  const toggleBookmark = async () => {
+  const toggleBookmark =  () => {
     if (isBookmarked) {
-      await removeBookmark(articleId);
+       removeBookmark(articleId);
       setIsBookmarked(false);
       callBack(true);
     } else {
-      await addBookmark({
+       addBookmark({
         articleId,
         title,
         timestamp,

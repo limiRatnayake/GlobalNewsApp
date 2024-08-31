@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import theme from '../../styles/theme';
-import {checkIsBookmarked} from '../services/user';
+import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
 
 const ArticleScreen = props => {
   const {item, articleId} = props.route.params;
@@ -23,6 +23,20 @@ const ArticleScreen = props => {
     checkBookmarkStatus();
   }, [articleId]);
 
+  const toggleBookmark = () => {
+    if (isBookmarked) {
+      removeBookmark(articleId);
+      setIsBookmarked(false);
+      callBack(true);
+    } else {
+      addBookmark({
+        articleId,
+        item
+      });
+      setIsBookmarked(true);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -31,18 +45,7 @@ const ArticleScreen = props => {
           onPress={() => props.navigation.goBack()}>
           <Icon name="arrow-back" size={24} color={theme.color.primary} />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            dispatch(
-              toggleIsBookmarked(
-                articleId,
-                item.title,
-                item.timestamp,
-                item.userProfile,
-                item.urlToImage,
-              ),
-            )
-          }>
+        <TouchableOpacity onPress={() => toggleBookmark()}>
           <Icon2
             name={isBookmarked ? 'bookmark' : 'bookmark-border'}
             size={24}
