@@ -1,6 +1,8 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {signOut} from './auth';
+import store from '../store/store';
+import { setIsBookmarked } from '../store/reducers/articleSlice';
 
 export const saveUserData = async user => {
   if (!user || !user.uid) {
@@ -133,7 +135,7 @@ export const checkIsBookmarked = async articleIdNew => {
       .doc(articleIdNew);
 
     const doc = await bookmarkRef.get(); 
-
+    store.dispatch(setIsBookmarked(doc.exists));
     return doc.exists;
   } catch (error) {
     console.log('Error checking bookmark status:', error);

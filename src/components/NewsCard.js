@@ -17,15 +17,16 @@ const NewsCard = ({
   article,
   articleIdNo,
   callBack,
+  navigation,
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
-  
+
   const articleId = articleIdNo == '' ? generateUniqueId(article) : articleIdNo;
 
-  useEffect(() => { 
+  useEffect(() => {
     const checkBookmarkStatus = async () => {
       if (articleId) {
-        const bookmarked = await checkIsBookmarked(articleId); 
+        const bookmarked = await checkIsBookmarked(articleId);
         setIsBookmarked(bookmarked);
       }
     };
@@ -50,41 +51,50 @@ const NewsCard = ({
   };
 
   return (
-    <View key={index} style={[styles.card, styles.verticalCard]}>
-      {urlToImage ? (
-        <View style={styles.imageContainer}>
-          <Image
-            resizeMode="cover"
-            source={{uri: urlToImage}}
-            style={styles.image}
-          />
-        </View>
-      ) : null}
-      <View style={styles.textContainer}>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.title} numberOfLines={1}>
-              {userProfile}
-            </Text>
-            <Text style={styles.timestamp}>
-              {moment(timestamp).format('DD/MM/YYYY HH:MM A')}
-            </Text>
-          </View>
-        </View>
-        <Text style={styles.title} numberOfLines={2}>
-          {title}
-        </Text>
-        <TouchableOpacity onPress={() => toggleBookmark()}>
-          <View style={styles.footer}>
-            <Icon
-              name={isBookmarked ? 'bookmark' : 'bookmark-border'}
-              size={24}
-              color={theme.color.primary}
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() =>
+        navigation.navigate('ArticleView', {
+          item: article,
+          articleId: articleId,
+        })
+      }>
+      <View key={index} style={[styles.card, styles.verticalCard]}>
+        {urlToImage ? (
+          <View style={styles.imageContainer}>
+            <Image
+              resizeMode="cover"
+              source={{uri: urlToImage}}
+              style={styles.image}
             />
           </View>
-        </TouchableOpacity>
+        ) : null}
+        <View style={styles.textContainer}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.title} numberOfLines={1}>
+                {userProfile}
+              </Text>
+              <Text style={styles.timestamp}>
+                {moment(timestamp).format('DD/MM/YYYY HH:MM A')}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.title} numberOfLines={2}>
+            {title}
+          </Text>
+          <View style={styles.footer}>
+            <TouchableOpacity onPress={() => toggleBookmark()}>
+              <Icon
+                name={isBookmarked ? 'bookmark' : 'bookmark-border'}
+                size={24}
+                color={theme.color.primary}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -146,6 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    alignSelf: 'flex-end',
   },
   category: {
     fontSize: 12,

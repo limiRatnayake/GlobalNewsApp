@@ -32,7 +32,7 @@ export default styles = StyleSheet.create({
     marginRight: 10,
   },
   categoryList: {
-    marginBottom: 20,
+    marginBottom: '5%', 
   },
   categoryListContainer: {
     padding: 0,

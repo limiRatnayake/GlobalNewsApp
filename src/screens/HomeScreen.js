@@ -21,7 +21,7 @@ import theme from '../../styles/theme';
 const HomeScreen = props => {
   const [topHeading, setTopHeadings] = useState([]);
   const [recommendedArticles, setRecommendedArticles] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
   const [callNewsArticles, setCallNewsArticles] = useState(false);
@@ -35,10 +35,10 @@ const HomeScreen = props => {
   useEffect(() => {
     if (isFocused) {
       setRecommendedArticles([]);
-      setCurrentPage(1, debouncedQuery);
+      setCurrentPage(1);
       setHasMoreArticles(true);
       getTopHeadings();
-      getNewArticles(1);
+      getNewArticles(1, debouncedQuery);
     } else {
       setRecommendedArticles([]);
     }
@@ -70,8 +70,7 @@ const HomeScreen = props => {
   };
 
   const getNewArticles = useCallback(
-    async (page = 1) => {
-      if (isLoading || !hasMoreArticles) return;
+    async (page = 1) => { 
       setIsLoading(true);
       console.log(page, 'p[age');
       try {
@@ -94,38 +93,30 @@ const HomeScreen = props => {
         console.log('newsTopHeading Error', error.message);
         setHasMoreArticles(false);
         setIsLoading(false);
-        setLoadingMore(false);
       } finally {
         setIsLoading(false);
         setLoadingMore(false);
         setCallNewsArticles(false);
+        setHasMoreArticles(false);
       }
     },
     [selectedOption, isLoading, hasMoreArticles, debouncedQuery],
   );
   const renderRecommendedNewsItem = ({item, index}) => {
     return (
-      <TouchableOpacity
-        key={index}
-        activeOpacity={1}
-        onPress={() =>
-          props.navigation.navigate('ArticleView', {
-            item: item,
-          })
-        }>
-        <NewsCard
-          index={index}
-          title={item.title}
-          isHorizontal={false}
-          userProfile={item.author}
-          timestamp={item.publishedAt}
-          category={item.category}
-          urlToImage={item.urlToImage}
-          article={item}
-          articleIdNo={''}
-          callBack={() => {}}
-        />
-      </TouchableOpacity>
+      <NewsCard
+        index={index}
+        title={item.title}
+        isHorizontal={false}
+        userProfile={item.author}
+        timestamp={item.publishedAt}
+        category={item.category}
+        urlToImage={item.urlToImage}
+        article={item}
+        articleIdNo={''}
+        callBack={() => {}}
+        navigation={props.navigation}
+      />
     );
   };
 
@@ -179,38 +170,30 @@ const HomeScreen = props => {
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color={theme.color.primary} />
-      ) : (
-        <>
-          {recommendedArticles?.length > 0 ? (
-            <FlatList
-              data={recommendedArticles}
-              renderItem={(item, index) =>
-                renderRecommendedNewsItem(item, index)
-              }
-              keyExtractor={(item, index) => index}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.verticalList}
-              onEndReached={() => {
-                if (!loadingMore && hasMoreArticles) {
-                  console.log(currentPage, 'onEndReached');
+      ) : recommendedArticles?.length > 0 ? (
+        <FlatList
+          data={recommendedArticles}
+          renderItem={(item, index) => renderRecommendedNewsItem(item, index)}
+          keyExtractor={(item, index) => index}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.verticalList}
+          onEndReached={() => {
+            if (!loadingMore && hasMoreArticles) {
+              console.log(currentPage, 'onEndReached');
 
-                  setLoadingMore(true);
-                  setCurrentPage(prevPage => prevPage + 1);
-                  getNewArticles(currentPage);
-                }
-              }}
-              onEndReachedThreshold={0.5}
-              ListFooterComponent={
-                loadingMore ? <ActivityIndicator size="large" /> : null
-              }
-            />
-          ) : (
-            <View>
-              <Text>News are not available</Text>
-            </View>
-          )}
-        </>
+              setLoadingMore(true);
+              setCurrentPage(prevPage => prevPage + 1);
+              getNewArticles(currentPage);
+            }
+          }}
+          onEndReachedThreshold={0.5}
+        />
+      ) : (
+        <View>
+          <Text>News are not available</Text>
+        </View>
       )}
+
       <SortOptionsModal
         visible={isModalVisible}
         onClose={handleCloseModal}

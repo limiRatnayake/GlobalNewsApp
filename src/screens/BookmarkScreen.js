@@ -16,8 +16,8 @@ import {getBookmarks} from '../services/user';
 import {useIsFocused} from '@react-navigation/native';
 import theme from '../../styles/theme';
 
-const BookmarkScreen = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const BookmarkScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [bookmarkedArticles, setBookmarkedArticles] = useState([]);
   const [refreshItems, setRefreshItems] = useState(false);
   const isFocused = useIsFocused();
@@ -40,14 +40,8 @@ const BookmarkScreen = () => {
     }
   }, [isFocused, refreshItems]);
 
-  const renderRecommendedNewsItem = ({item, index}) => (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() =>
-        props.navigation.navigate('ArticleView', {
-          item: item,
-        })
-      }>
+  const renderRecommendedNewsItem = ({item, index}) => {
+    return (
       <NewsCard
         index={index}
         title={item.title}
@@ -59,9 +53,10 @@ const BookmarkScreen = () => {
         article={item}
         articleIdNo={item.articleId}
         callBack={setRefreshItems}
+        navigation={props.navigation}
       />
-    </TouchableOpacity>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>

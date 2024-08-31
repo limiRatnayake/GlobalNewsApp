@@ -31,7 +31,7 @@ export const fetchTopHeadlines = async () => {
   }
 };
 
-export const fetchLatestNewsArticles = async (q, sortBy, page = 1) => {
+export const fetchLatestNewsArticles = async (q, sortBy, page) => {
   console.log(sortBy, 'fetchLatestNewsArticles');
   const query = q ? q : 'news';
   console.log(
@@ -91,13 +91,16 @@ export const fetchNewsBySources = async category => {
 };
 
 // fetch news by category
-export const fetchNewsByCategory = async category => {
+export const fetchNewsByCategory = async (category, page) => {
   console.log(category, 'category');
 
   try {
     const response = await apiClient.get(
-      `/top-headlines?country=us&category=${category}&pageSize=10`,
+      `/top-headlines?country=us&category=${category}&pageSize=10&page=${page}`,
     );
+console.log(
+  `/top-headlines?country=us&category=${category}&pageSize=10&page=${page}`,
+);
 
     return response.data.articles;
   } catch (error) {

@@ -1,13 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import {useDispatch, useSelector} from 'react-redux';
+import theme from '../../styles/theme';
+import {checkIsBookmarked} from '../services/user';
 
 const ArticleScreen = props => {
-  const {item} = props.route.params;
-  const [isConnected, setIsConnected] = useState(true);
-  console.log(item, 'title');
+  const {item, articleId} = props.route.params;
+  const [isConnected, setIsConnected] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  useEffect(() => {
+    const checkBookmarkStatus = async () => {
+      if (articleId) {
+        const bookmarked = await checkIsBookmarked(articleId);
+        setIsBookmarked(bookmarked);
+      }
+    };
+    checkBookmarkStatus();
+  }, [articleId]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -15,9 +29,26 @@ const ArticleScreen = props => {
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => props.navigation.goBack()}>
-          <Icon name="arrow-back" size={24} color="white" />
+          <Icon name="arrow-back" size={24} color={theme.color.primary} />
         </TouchableOpacity>
-        <Icon name="bookmark-outline" size={24} color="white" />
+        <TouchableOpacity
+          onPress={() =>
+            dispatch(
+              toggleIsBookmarked(
+                articleId,
+                item.title,
+                item.timestamp,
+                item.userProfile,
+                item.urlToImage,
+              ),
+            )
+          }>
+          <Icon2
+            name={isBookmarked ? 'bookmark' : 'bookmark-border'}
+            size={24}
+            color={theme.color.primary}
+          />
+        </TouchableOpacity>
       </View>
       {isConnected ? (
         <WebView source={{uri: item?.url}} style={{flex: 1}} />
@@ -66,7 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#333',
+    backgroundColor: '#000',
   },
   articleContainer: {
     padding: 16,
