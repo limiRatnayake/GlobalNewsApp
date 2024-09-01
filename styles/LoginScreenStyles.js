@@ -44,6 +44,7 @@ const LoginScreenStyles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    alignSelf: 'flex-start'
   },
   forgotPasswordText: {
     alignSelf: 'flex-start',

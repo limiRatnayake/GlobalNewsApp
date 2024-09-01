@@ -2,7 +2,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {signOut} from './auth';
 import store from '../store/store';
-import { setIsBookmarked } from '../store/reducers/articleSlice';
+import {setIsBookmarked} from '../store/reducers/articleSlice';
 
 export const saveUserData = async user => {
   if (!user || !user.uid) {
@@ -134,7 +134,7 @@ export const checkIsBookmarked = async articleIdNew => {
       .collection('bookmarks')
       .doc(articleIdNew);
 
-    const doc = await bookmarkRef.get();  
+    const doc = await bookmarkRef.get();
     return doc.exists;
   } catch (error) {
     console.log('Error checking bookmark status:', error);
@@ -161,5 +161,19 @@ export const getBookmarks = async () => {
   } catch (error) {
     console.error('Error fetching bookmarks:', error);
     return [];
+  }
+};
+
+export const resetPassword = async email => {
+  try {
+    const signInMethods = await auth().fetchSignInMethodsForEmail(email);
+    if (signInMethods.length > 0) {
+      await auth().sendPasswordResetEmail(email);
+      return true;
+    } else {
+      throw new Error('This email is not registered.');
+    }
+  } catch (error) {
+    throw error;
   }
 };

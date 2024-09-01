@@ -112,11 +112,12 @@ const LoginScreen = props => {
                 : showErrorMessage.reqFailed}
             </Text>
           ) : null}
-          {/* <View style={styles.forgotPasswordContainer}>
-            <TouchableOpacity>
+          <View style={styles.forgotPasswordContainer}>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('ForgotPassword')}>
               <Text style={styles.forgotPasswordText}>Forgot password?</Text>
             </TouchableOpacity>
-          </View> */}
+          </View>
           <TouchableOpacity
             style={globalStyles.button}
             onPress={() => handleEmailLogin()}>
