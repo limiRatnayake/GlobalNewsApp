@@ -22,6 +22,7 @@ const DiscoverScreen = props => {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [refreshItems, setRefreshItems] = useState(false);
   const {categoryList} = useSelector(state => state.category);
+  const {networkAvailability} = useSelector(state => state.loader);
   const [loadingMore, setLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreArticles, setHasMoreArticles] = useState(true);
@@ -30,14 +31,14 @@ const DiscoverScreen = props => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused || refreshItems) {
+    if (isFocused || refreshItems || networkAvailability) {
       getNewsByCategory();
       setRefreshItems(false);
       setNewsByCategory([]);
       setCurrentPage(1);
       setHasMoreArticles(true);
     }
-  }, [isFocused, refreshItems]);
+  }, [isFocused, refreshItems, networkAvailability]);
 
   const getNewsByCategory = async () => {
     try {

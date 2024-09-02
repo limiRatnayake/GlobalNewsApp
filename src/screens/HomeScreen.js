@@ -17,9 +17,11 @@ import SortOptionsModal from '../components/SortOptionModal';
 import ProfileImage from '../components/ProfileImage';
 import {useIsFocused} from '@react-navigation/native';
 import theme from '../../styles/theme';
+import { useDispatch, useSelector } from 'react-redux';
+import NetInfo from '@react-native-community/netinfo';
+import { setNetworkStatus } from '../store/actions/loaderAction';
 
-const HomeScreen = props => {
-  const [topHeading, setTopHeadings] = useState([]);
+const HomeScreen = props => { 
   const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState('');
@@ -29,20 +31,32 @@ const HomeScreen = props => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMoreArticles, setHasMoreArticles] = useState(true);
   const [debouncedQuery, setDebouncedQuery] = useState('');
-
+  const {networkAvailability} = useSelector(state => state.loader);
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log(state.isConnected, 'state.isConnected');
+      
+      dispatch(setNetworkStatus(state.isConnected));
+    }); 
+    return () => unsubscribe();
+  }, [dispatch]);
+  
+
+  useEffect(() => {
+    console.log(networkAvailability, 'networkAvailability');
+    
+    if (isFocused || networkAvailability) {
       setRecommendedArticles([]);
       setCurrentPage(1);
-      setHasMoreArticles(true);
-      getTopHeadings();
+      setHasMoreArticles(true); 
       getNewArticles(1, debouncedQuery);
     } else {
       setRecommendedArticles([]);
     }
-  }, [isFocused]);
+  }, [isFocused, networkAvailability]);
 
   useEffect(() => {
     if (callNewsArticles) {
@@ -58,16 +72,16 @@ const HomeScreen = props => {
     getNewArticles(1, debouncedQuery);
   }, [debouncedQuery]);
 
-  const getTopHeadings = async () => {
-    try {
-      let topHeadings = await fetchTopHeadlines();
-      console.log('newsTopHeading', topHeadings);
-      setTopHeadings(topHeadings);
-    } catch (error) {
-      console.log('newsTopHeading Error', error.message);
-      setTopHeadings([]);
-    }
-  };
+  // const getTopHeadings = async () => {
+  //   try {
+  //     let topHeadings = await fetchTopHeadlines();
+  //     console.log('newsTopHeading', topHeadings);
+  //     setTopHeadings(topHeadings);
+  //   } catch (error) {
+  //     console.log('newsTopHeading Error', error.message);
+  //     setTopHeadings([]);
+  //   }
+  // };
 
   const getNewArticles = useCallback(
     async (page = 1) => { 

@@ -7,10 +7,11 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import theme from '../../styles/theme';
 import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
+import moment from 'moment';
 
 const ArticleScreen = props => {
   const {item, articleId} = props.route.params;
-  const [isConnected, setIsConnected] = useState(false);
+  const {networkAvailability} = useSelector(state => state.loader);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const ArticleScreen = props => {
     } else {
       addBookmark({
         articleId,
-        item
+        item,
       });
       setIsBookmarked(true);
     }
@@ -53,35 +54,28 @@ const ArticleScreen = props => {
           />
         </TouchableOpacity>
       </View>
-      {isConnected ? (
+      {networkAvailability ? (
         <WebView source={{uri: item?.url}} style={{flex: 1}} />
       ) : (
         <>
           <View style={styles.articleContainer}>
-            <ScrollView>
-              <View style={styles.articleHeader}>
-                <Text style={styles.categoryLabel}>Sports</Text>
-              </View>
+            <ScrollView> 
               <Text style={styles.articleTitle}>{item?.title}</Text>
-              <View style={styles.articleMetaContainer}>
+              {item.urlToImage && (
                 <Image
-                  source={{uri: 'https://via.placeholder.com/50'}}
+                  source={{uri: item.urlToImage}}
                   style={styles.profileImage}
                 />
+              )}
+              <View style={styles.articleMetaContainer}>
                 <View>
-                  <Text style={styles.articleMeta}>South Africa</Text>
-                  <Text style={styles.articleTime}>1 hour ago</Text>
+                  <Text style={styles.articleMeta}>{item?.author}</Text>
+                  <Text style={styles.articleTime}>
+                    {moment(item?.publishedAt).format('DD/MM/YYYY HH:MM A')}
+                  </Text>
                 </View>
               </View>
-              <Text style={styles.articleBody}>
-                Kamala Harris promised Americans a future that neither Donald
-                Trump nor Joe Biden could deliver, showing how profoundly she
-                has changed the 2024 election. The first Black woman to claim a
-                major party nomination on Thursday styled her “unlikely journey”
-                to the Democratic nod as the springboard to lift the country to
-                a new place after years being torn apart by its bitter divides.
-                ...
-              </Text>
+              <Text style={styles.articleBody}>{item?.content}</Text>
             </ScrollView>
           </View>
         </>
@@ -130,11 +124,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
+    marginTop: 16,
   },
   profileImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: "100%",
+    height: '80%',
+    borderRadius: theme.borderRadius,
     marginRight: 12,
   },
   articleMeta: {

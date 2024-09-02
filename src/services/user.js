@@ -156,6 +156,7 @@ export const getBookmarks = async () => {
       .collection('bookmarks')
       .orderBy('createdAt', 'desc')
       .get();
+console.log(snapshot, 'snapshot');
 
     return snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
   } catch (error) {

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import store from '../store/store';
 import { getTotalNotificationCount } from '../store/actions/notificationAction';
+import NetInfo from '@react-native-community/netinfo';
+import { createTables, getArticles, getArticlesByCategory, getCategories, insertArticles, insertCategories } from './SQLiteService';
 
 const BASE_URL = 'https://newsapi.org/v2';
 // const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
@@ -16,95 +18,104 @@ const apiClient = axios.create({
   },
 });
 
-// Function to fetch top headlines
-export const fetchTopHeadlines = async () => {
-  try {
-    const response = await apiClient.get(
-      `/top-headlines?sources=techcrunch&pageSize=10`,
-    );
-    console.log(response.data.length);
-
-    return response.data.articles;
-  } catch (error) {
-    console.error('Error fetching top headlines:', error);
-    return [];
-  }
-};
+createTables();
 
 export const fetchLatestNewsArticles = async (q, sortBy, page) => {
-  console.log(sortBy, 'fetchLatestNewsArticles');
+  const netInfo = await NetInfo.fetch();
   const query = q ? q : 'news';
-  console.log(
-      `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,)
-  try {
-    store.dispatch(getTotalNotificationCount(0));
-    const response = await apiClient.get(
-      `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,
-    );
-    console.log(
-      `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,
-      response.data.articles,
-      'response',
-    );
 
-    return response.data.articles;
-  } catch (error) {
-    console.error('Error fetching news articles:', error);
+  if (netInfo.isConnected) {
+    try {
+      const response = await apiClient.get(
+        `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,
+      );
+      const articles = response.data.articles;
+
+      // Insert articles into SQLite database
+      insertArticles(articles, '', query);
+
+      return articles;
+    } catch (error) {
+      console.error('Error fetching news articles:', error);
+      return [];
+    }
+  } else {
+    return new Promise(resolve => {
+      getArticles('', query, articles => {
+        console.log(articles, 'articles');
+        
+        resolve(articles);
+      });
+    });
   }
-};
-
-// Function to search news articles by keyword
-export const searchNews = async keyword => {
-  console.log('called', keyword);
-  
-  // try {
-  //   const response = await apiClient.get(`/everything?q=${keyword}`);
-  //   return response.data.articles;
-  // } catch (error) {
-  //   console.error('Error searching news:', error);
-  //   throw error;
-  // }
 };
 
 //  fetch news to get categories
-export const fetchNewsBySources = async category => {
-  try {
-    const response = await apiClient.get(
-      `/top-headlines/sources?country=us&pageSize=10`,
-    );
+export const fetchNewsBySources = async () => {
+  const netInfo = await NetInfo.fetch();
 
-    const sources = response.data.sources;
+  if (netInfo.isConnected) {
+    try {
+      const response = await apiClient.get(
+        `/top-headlines/sources?country=us&pageSize=10`,
+      );
 
-    const uniqueCategories = [];
+      const sources = response.data.sources;
 
-    sources.forEach(source => {
-      if (!uniqueCategories.includes(source.category)) {
-        uniqueCategories.push(source.category);
-      }
+      const uniqueCategories = [];
+
+      sources.forEach(source => {
+        if (!uniqueCategories.includes(source.category)) {
+          uniqueCategories.push(source.category);
+        }
+      });
+
+      // Insert categories into SQLite database
+      insertCategories(uniqueCategories);
+
+      return uniqueCategories;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      return [];
+    }
+  } else {
+    // Fetch categories from the SQLite database when offline
+    return new Promise(resolve => {
+      getCategories(categories => {
+        console.log(categories, 'fetchNewsBySources');
+        
+        resolve(categories);
+      });
     });
-
-    return uniqueCategories;
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    throw error;
   }
 };
 
 // fetch news by category
 export const fetchNewsByCategory = async (category, page) => {
-  console.log(category, 'category');
+  const netInfo = await NetInfo.fetch();
 
-  try {
-    const response = await apiClient.get(
-      `/top-headlines?country=us&category=${category}&pageSize=10&page=${page}`,
-    );
-console.log(
-  `/top-headlines?country=us&category=${category}&pageSize=10&page=${page}`,
-);
+  if (netInfo.isConnected) {
+    try {
+      const response = await apiClient.get(
+        `/top-headlines?country=us&category=${category}&pageSize=10&page=${page}`,
+      );
+      const articles = response.data.articles;
 
-    return response.data.articles;
-  } catch (error) {
-    console.error('Error fetching news by category:', error);
-    throw error;
+      // Insert articles into SQLite database
+      insertArticles(articles, category, '');
+
+      return articles;
+    } catch (error) {
+      console.error('Error fetching news by category:', error);
+      return [];
+    }
+  } else {
+    return new Promise(resolve => {
+      getArticlesByCategory(category, articles => {
+        console.log(category, 'insertArticles category', articles);
+
+        resolve(articles);
+      });
+    });
   }
 };

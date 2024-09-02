@@ -40,12 +40,14 @@ const NewsCard = ({
       callBack(true);
     } else {
        addBookmark({
-        articleId,
-        title,
-        timestamp,
-        userProfile,
-        urlToImage,
-      });
+         articleId,
+         title,
+         timestamp,
+         userProfile,
+         urlToImage,
+         content: article?.content,
+         author: article?.author,
+       });
       setIsBookmarked(true);
     }
   };
