@@ -21,11 +21,11 @@ const LoginScreenStyles = StyleSheet.create({
     height: '100%',
   },
   bodyContainer: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     justifyContent: 'flex-start',
     backgroundColor: theme.color.white,
-    borderRadius: 25,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     paddingHorizontal: '10%',
     paddingVertical: '10%',
   },
@@ -44,7 +44,7 @@ const LoginScreenStyles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
   },
   forgotPasswordText: {
     alignSelf: 'flex-start',
@@ -80,12 +80,12 @@ const LoginScreenStyles = StyleSheet.create({
     borderColor: '#ccc',
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   googleIcon: {width: 24, height: 24, marginRight: 10},
   googleButtonText: {
     color: theme.color.black,
-    fontFamily: theme.fonts.extraBold
+    fontFamily: theme.fonts.extraBold,
   },
   divider: {marginVertical: 10},
 });

@@ -32,7 +32,7 @@ export const signInWithEmail = async (email, password) => {
     return userCredential.user;
   } catch (error) {
     console.log('Error signing in with email and password:', error);
-    throw handleFirebaseAuthError(error);
+    return handleFirebaseAuthError(error);
   }
 };
 
@@ -45,8 +45,10 @@ export const signUpWithEmail = async (email, password, name, termsAccepted) => {
       name,
       termsAccepted,
     );
+    console.log(userCredential, 'userCredential');
+    
     await saveUserData(userCredential.user);
-    return userCredential.user;
+    return userCredential;
   } catch (error) {
     console.log('Error signing up:', error);
     return handleFirebaseAuthError(error);
