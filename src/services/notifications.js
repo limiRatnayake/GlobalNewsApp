@@ -52,10 +52,10 @@ async function storeNotification(notification) {
 export function notificationListener() {
   messaging().onMessage(async remoteMessage => {
     console.log('Foreground message received:', remoteMessage);
-    Alert.alert(
-      remoteMessage.notification.title,
-      remoteMessage.notification.body,
-    );
+    // Alert.alert(
+    //   remoteMessage.notification.title,
+    //   remoteMessage.notification.body,
+    // );
     await storeNotification({
       id: remoteMessage.messageId,
       title: remoteMessage.notification.title,

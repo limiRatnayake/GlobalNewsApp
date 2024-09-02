@@ -16,7 +16,8 @@ import SortOptionsModal from '../components/SortOptionModal';
 import ProfileImage from '../components/ProfileImage';
 import {useIsFocused} from '@react-navigation/native';
 import theme from '../../styles/theme';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import { getTotalNotificationCount } from '../store/actions/notificationAction';
 
 const HomeScreen = props => {
   const [recommendedArticles, setRecommendedArticles] = useState([]);
@@ -29,7 +30,9 @@ const HomeScreen = props => {
   const [hasMoreArticles, setHasMoreArticles] = useState(true);
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const {networkAvailability} = useSelector(state => state.loader);
+  const {notificationCount} = useSelector(state => state.notification);
   const isFocused = useIsFocused();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isFocused || networkAvailability) {
@@ -37,6 +40,7 @@ const HomeScreen = props => {
       setCurrentPage(1);
       setHasMoreArticles(true);
       getNewArticles(1, debouncedQuery);
+      dispatch(getTotalNotificationCount(0));
     } else {
       setRecommendedArticles([]);
     }
@@ -132,6 +136,11 @@ const HomeScreen = props => {
             <TouchableOpacity
               onPress={() => props.navigation.navigate('NotificationView')}>
               <Icon name="notifications-none" size={30} style={styles.icon} />
+              {notificationCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{notificationCount}</Text>
+                </View>
+              )}
             </TouchableOpacity>
           </View>
         </View>

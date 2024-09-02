@@ -74,4 +74,20 @@ export default styles = StyleSheet.create({
     backgroundColor: '#eee',
     marginBottom: 10,
   },
+  badge: {
+    position: 'absolute',
+    right: 0,
+    top: -10,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
 });

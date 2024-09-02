@@ -1,6 +1,5 @@
 import axios from 'axios';
-import store from '../store/store';
-import { getTotalNotificationCount } from '../store/actions/notificationAction';
+import store from '../store/store'; 
 import NetInfo from '@react-native-community/netinfo';
 import { createTables, getArticles, getArticlesByCategory, getCategories, insertArticles, insertCategories } from './SQLiteService';
 
