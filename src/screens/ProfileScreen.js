@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProfileImage from '../components/ProfileImage';
@@ -16,8 +17,11 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 import {signOut} from '../services/auth';
 import {getUserProfile, saveUserData, updateUserData} from '../services/user';
 import {validateEmail, validateName} from '../utils/validation';
+import styles from '../../styles/ProfileScreenStyles';
 
 const ProfileScreen = props => {
+  const [loading, setLoading] = useState('');
+  const [saveLoading, setSaveLoading] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,7 +32,6 @@ const ProfileScreen = props => {
     reqFailed: '',
   });
   const [successMessage, setSuccessMessage] = useState('');
-  
 
   useEffect(() => {
     getUserDetails();
@@ -44,6 +47,7 @@ const ProfileScreen = props => {
   };
 
   const getUserDetails = async () => {
+    setLoading(true);
     try {
       let userProfile = await getUserProfile();
       console.log('userDetails: ', userProfile);
@@ -51,12 +55,15 @@ const ProfileScreen = props => {
         setName(userProfile.name || '');
         setEmail(userProfile.email || '');
       }
+      setLoading(false);
     } catch (error) {
       console.log('get user details Error', error.message);
+      setLoading(false);
     }
   };
 
   const saveUserDetails = async () => {
+    setSaveLoading(true);
     const nameError = validateName(name);
     const emailError = validateEmail(email);
     if (nameError || emailError) {
@@ -64,6 +71,7 @@ const ProfileScreen = props => {
         name: nameError,
         email: emailError,
       });
+      setSaveLoading(false);
       return;
     }
     let user = {
@@ -76,15 +84,17 @@ const ProfileScreen = props => {
       getUserDetails();
       setSuccessMessage(data);
       setShowErrorMessage({});
+      setSaveLoading(false);
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
       console.log('save User Details Error', error);
-       setSuccessMessage('');
+      setSuccessMessage('');
       setShowErrorMessage({
         reqFailed: 'Something went wrong. Please try again later!',
       });
+      setSaveLoading(false);
     }
   };
 
@@ -100,102 +110,78 @@ const ProfileScreen = props => {
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.profileSection}>
-          <ProfileImage identifier={name} size={80} />
-          <Text style={styles.profileName}>{name}</Text>
-        </View>
-
-        <View style={styles.formContainer}>
-          <View style={styles.inputWrapper}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-              style={[
-                showErrorMessage.name
-                  ? globalStyles.inputError
-                  : globalStyles.input,
-              ]}
-              value={name}
-              placeholder="Enter your name"
-              onChangeText={text => {
-                setName(text);
-                setShowErrorMessage(prev => ({...prev, name: ''}));
-              }}
-            />
-            {showErrorMessage.name ? (
-              <Text style={globalStyles.errorMessage}>
-                {showErrorMessage.name}
-              </Text>
-            ) : null}
-          </View>
-
-          <View style={styles.inputWrapper}>
-            <Text style={styles.label}>Email Address</Text>
-            <TextInput
-              style={[
-                showErrorMessage.email
-                  ? globalStyles.inputError
-                  : globalStyles.input,
-              ]}
-              value={email}
-              placeholder="name@email.com"
-              keyboardType="email-address"
-              onChangeText={text => {
-                setEmail(text);
-                setShowErrorMessage(prev => ({...prev, email: ''}));
-              }}
-            />
-            {showErrorMessage.email ? (
-              <Text style={globalStyles.errorMessage}>
-                {showErrorMessage.email}
-              </Text>
-            ) : null}
-          </View>
-
-          {/* <View style={styles.inputWrapper}>
-            <Text style={styles.label}>Password</Text>
-            <View
-              style={[
-                showErrorMessage.password
-                  ? globalStyles.inputErrorContainer
-                  : globalStyles.inputContainer,
-              ]}>
-              <TextInput
-                style={globalStyles.inputWithIcon}
-                placeholder="Create a password"
-                secureTextEntry={!passwordVisible}
-                onChangeText={text => {
-                  setPassword(text);
-                  setShowErrorMessage(prev => ({...prev, password: ''}));
-                }}
-              />
-              <TouchableOpacity
-                onPress={() => setPasswordVisible(!passwordVisible)}>
-                <Icon2
-                  name={!passwordVisible ? 'eye-slash' : 'eye'}
-                  size={24}
-                />
-              </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator size="small" color={theme.color.primary} />
+        ) : (
+          <React.Fragment>
+            <View style={styles.profileSection}>
+              <ProfileImage identifier={name} size={80} />
+              <Text style={styles.profileName}>{name}</Text>
             </View>
-            {showErrorMessage.password ? (
+
+            <View style={styles.formContainer}>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.label}>Name</Text>
+                <TextInput
+                  style={[
+                    showErrorMessage.name
+                      ? globalStyles.inputError
+                      : globalStyles.input,
+                  ]}
+                  value={name}
+                  placeholder="Enter your name"
+                  onChangeText={text => {
+                    setName(text);
+                    setShowErrorMessage(prev => ({...prev, name: ''}));
+                  }}
+                />
+                {showErrorMessage.name ? (
+                  <Text style={globalStyles.errorMessage}>
+                    {showErrorMessage.name}
+                  </Text>
+                ) : null}
+              </View>
+
+              <View style={styles.inputWrapper}>
+                <Text style={styles.label}>Email Address</Text>
+                <TextInput
+                  style={[
+                    showErrorMessage.email
+                      ? globalStyles.inputError
+                      : globalStyles.input,
+                  ]}
+                  value={email}
+                  placeholder="name@email.com"
+                  keyboardType="email-address"
+                  onChangeText={text => {
+                    setEmail(text);
+                    setShowErrorMessage(prev => ({...prev, email: ''}));
+                  }}
+                />
+                {showErrorMessage.email ? (
+                  <Text style={globalStyles.errorMessage}>
+                    {showErrorMessage.email}
+                  </Text>
+                ) : null}
+              </View>
+            </View>
+            {showErrorMessage.reqFailed && (
               <Text style={globalStyles.errorMessage}>
-                {showErrorMessage.password}
+                {showErrorMessage.reqFailed}
               </Text>
-            ) : null}
-          </View> */}
-        </View>
-        {showErrorMessage.reqFailed && (
-          <Text style={globalStyles.errorMessage}>
-            {showErrorMessage.reqFailed}
-          </Text>
+            )}
+            {successMessage && (
+              <Text style={globalStyles.successMessage}>{successMessage}</Text>
+            )}
+            <TouchableOpacity
+              style={globalStyles.buttonWithBorder}
+              onPress={() => saveUserDetails()}>
+              <Text style={globalStyles.buttonWithBorderText}>
+                {saveLoading ? <ActivityIndicator size={'small'} color={theme.color.primary} /> : 'Save Changes'}
+              </Text>
+            </TouchableOpacity>
+          </React.Fragment>
         )}
-        {successMessage && (
-          <Text style={globalStyles.successMessage}>{successMessage}</Text>
-        )}
-        <TouchableOpacity
-          style={globalStyles.buttonWithBorder}
-          onPress={() => saveUserDetails()}>
-          <Text style={globalStyles.buttonWithBorderText}>Save Changes</Text>
-        </TouchableOpacity>
       </ScrollView>
 
       <TouchableOpacity
@@ -206,51 +192,5 @@ const ProfileScreen = props => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: theme.padding.mainPadding,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  label: {
-    fontSize: 14,
-    marginBottom: 5,
-    color: theme.color.black,
-    fontFamily: theme.fonts.bold,
-  },
-  profileSection: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 8,
-  },
-  inputSection: {
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 12,
-  },
-  logoutButtonContainer: {
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    backgroundColor: '#fff',
-  },
-});
 
 export default ProfileScreen;
