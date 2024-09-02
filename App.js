@@ -21,10 +21,12 @@ function App() {
 
   useEffect(() => {
     requestUserPermission();
-    notificationListener();
-    // clearTable('articles');
+    notificationListener(); 
   }, []);
 
+  console.log = () => {};
+  console.warn = () => {};
+  console.error = () => {};
   return (
     <Provider store={store}>
       <SafeAreaView style={globalStyles.mainContainer}>
