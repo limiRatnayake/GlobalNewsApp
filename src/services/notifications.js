@@ -36,8 +36,8 @@ async function storeNotification(notification) {
       ? JSON.parse(storedNotifications)
       : [];
     notifications.push(notification);
-    store.dispatch(getTotalNotificationCount(notifications.length))
     await AsyncStorage.setItem('notifications', JSON.stringify(notifications));
+    store.dispatch(getTotalNotificationCount(notifications.length))
     notificationService.showNotification(
       notification.title,
       notification.message,
