@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   Text,
   TouchableOpacity,
   View,
@@ -10,18 +9,16 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import NewsCard from '../components/NewsCard';
 import styles from '../../styles/HomeScreen';
-import {fetchLatestNewsArticles, fetchTopHeadlines} from '../services/news';
+import {fetchLatestNewsArticles} from '../services/news';
 import SortingButton from '../components/SortingButton';
 import SearchBar from '../components/SearchBar';
 import SortOptionsModal from '../components/SortOptionModal';
 import ProfileImage from '../components/ProfileImage';
 import {useIsFocused} from '@react-navigation/native';
 import theme from '../../styles/theme';
-import { useDispatch, useSelector } from 'react-redux';
-import NetInfo from '@react-native-community/netinfo';
-import { setNetworkStatus } from '../store/actions/loaderAction';
+import {useSelector} from 'react-redux';
 
-const HomeScreen = props => { 
+const HomeScreen = props => {
   const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState('');
@@ -32,26 +29,13 @@ const HomeScreen = props => {
   const [hasMoreArticles, setHasMoreArticles] = useState(true);
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const {networkAvailability} = useSelector(state => state.loader);
-  const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      console.log(state.isConnected, 'state.isConnected');
-      
-      dispatch(setNetworkStatus(state.isConnected));
-    }); 
-    return () => unsubscribe();
-  }, [dispatch]);
-  
-
-  useEffect(() => {
-    console.log(networkAvailability, 'networkAvailability');
-    
     if (isFocused || networkAvailability) {
       setRecommendedArticles([]);
       setCurrentPage(1);
-      setHasMoreArticles(true); 
+      setHasMoreArticles(true);
       getNewArticles(1, debouncedQuery);
     } else {
       setRecommendedArticles([]);
@@ -72,19 +56,8 @@ const HomeScreen = props => {
     getNewArticles(1, debouncedQuery);
   }, [debouncedQuery]);
 
-  // const getTopHeadings = async () => {
-  //   try {
-  //     let topHeadings = await fetchTopHeadlines();
-  //     console.log('newsTopHeading', topHeadings);
-  //     setTopHeadings(topHeadings);
-  //   } catch (error) {
-  //     console.log('newsTopHeading Error', error.message);
-  //     setTopHeadings([]);
-  //   }
-  // };
-
   const getNewArticles = useCallback(
-    async (page = 1) => { 
+    async (page = 1) => {
       setIsLoading(true);
       console.log(page, 'p[age');
       try {

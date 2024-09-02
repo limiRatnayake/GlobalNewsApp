@@ -8,11 +8,12 @@ import {Provider, useDispatch} from 'react-redux';
 import {
   notificationListener,
   requestUserPermission,
-} from './src/services/notifications';  
-import { clearTable } from './src/services/SQLiteService';
+} from './src/services/notifications';
+import {clearTable} from './src/services/SQLiteService';
+import OfflineAlert from './src/components/OfflineAlert';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark'; 
+  const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -24,7 +25,6 @@ function App() {
     // clearTable('articles');
   }, []);
 
-
   return (
     <Provider store={store}>
       <SafeAreaView style={globalStyles.mainContainer}>
@@ -32,6 +32,7 @@ function App() {
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           backgroundColor={backgroundStyle.backgroundColor}
         />
+        <OfflineAlert />
         <AppNavigator />
       </SafeAreaView>
     </Provider>
