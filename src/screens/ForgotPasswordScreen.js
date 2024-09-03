@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -14,26 +15,30 @@ import globalStyles from '../../styles/GlobalStyles';
 import theme from '../../styles/theme';
 import {validateEmail} from '../utils/validation';
 
-const ForgotPasswordScreen = (props) => {
+const ForgotPasswordScreen = props => {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
 
   const handlePasswordReset = async () => {
     const emailError = validateEmail(email);
-
+    setLoading(true);
     if (emailError) {
       setErrorMessage(emailError);
+      setLoading(false);
       return;
     }
 
     try {
-      const emailExists =  await resetPassword(email);
+      const emailExists = await resetPassword(email);
       if (emailExists) {
         setMessage('Password reset email sent! Check your inbox.');
+        setLoading(false);
       }
     } catch (error) {
       setErrorMessage(error.message);
+      setLoading(false);
     }
   };
 
@@ -70,7 +75,11 @@ const ForgotPasswordScreen = (props) => {
       <TouchableOpacity
         style={globalStyles.button}
         onPress={() => handlePasswordReset()}>
-        <Text style={globalStyles.buttonText}>Reset Password</Text>
+        {loading ? (
+          <ActivityIndicator size="small" color={theme.color.white} />
+        ) : (
+          <Text style={globalStyles.buttonText}>Reset Password</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
