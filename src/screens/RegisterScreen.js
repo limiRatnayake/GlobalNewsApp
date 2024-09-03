@@ -19,6 +19,7 @@ import {
 } from '../utils/validation';
 import {signUpWithEmail} from '../services/auth';
 import theme from '../../styles/theme';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 
 const SignUpScreen = props => {
   const [loading, setLoading] = useState(false);
@@ -102,7 +103,12 @@ const SignUpScreen = props => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
-          <Text style={globalStyles.title}>Sign up</Text>
+          <View style={globalStyles.header}>
+            <TouchableOpacity onPress={() => props.navigation.goBack()}>
+              <Icon2 name="arrow-back" size={24} color={theme.color.primary} />
+            </TouchableOpacity>
+            <Text style={[globalStyles.title, {marginLeft: 10}]}>Sign up</Text>
+          </View>
           <Text style={globalStyles.subtitle}>
             Create an account to get started
           </Text>

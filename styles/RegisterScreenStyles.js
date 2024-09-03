@@ -8,7 +8,7 @@ const RegisterScreenStyles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingTop: 40,
+    paddingTop: 2,
     flexGrow: 1,
     justifyContent: 'flex-start',
   },
