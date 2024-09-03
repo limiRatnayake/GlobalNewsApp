@@ -26,7 +26,7 @@ yarn start
 
 ## Download App (APK) 
 
-[**Download .apk file…**](https://github.com/rsms/inter/releases/latest)
+[**Download Global News App…**](https://github.com/limiRatnayake/GlobalNewsApp/releases/tag/v1.0.0)
 
 
 ## Features
@@ -65,6 +65,7 @@ yarn start
 - **Authentication:** Firebase Authentication for email/password and Google Sign-In 
 - **Database:** Firebase Cloud Firestore & SQLite
 - **Notification:** Firebase Messaging & React Native Push Notifications
+- **Offline Suport:** storing structured data locally on the device, providing fast access to large amounts of data, and managing offline capabilities efficiently
  
 ## Other libraries 
 - **crypto-js:** library to generate unique ID values
@@ -84,10 +85,7 @@ yarn start
 
 ## Screenshots
 
-![Login Screen](assets/screenshots/login.png)
-![Home Screen](assets/screenshots/HomeScreen.png)
-![Discover Screen](assets/screenshots/Discover.png)
-![Bookmarks Screen](assets/screenshots/Bookmarks.png)
+![Main Screens](assets/screenshots/main_screens.png) 
 
 
 
