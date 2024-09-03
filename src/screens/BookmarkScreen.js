@@ -12,9 +12,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import NewsCard from '../components/NewsCard';
 import styles from '../../styles/HomeScreen';
 import globalStyles from '../../styles/GlobalStyles';
-import {getBookmarks} from '../services/user';
+// import {getBookmarks} from '../services/user';
 import {useIsFocused} from '@react-navigation/native';
 import theme from '../../styles/theme';
+import { getBookmarks } from '../services/SQLiteService';
 
 const BookmarkScreen = (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,13 +26,15 @@ const BookmarkScreen = (props) => {
   useEffect(() => {
     setIsLoading(true);
     if (isFocused || refreshItems) {
-      const fetchBookmarks = async () => {
-        const articles = await getBookmarks();
-        console.log(articles, 'fetchBookmarks');
+      const fetchBookmarks =  () => {
+           getBookmarks(articles => {
+             // const articles = await getBookmarks();
+             console.log(articles, 'fetchBookmarks');
 
-        setBookmarkedArticles(articles);
-        setRefreshItems(false);
-        setIsLoading(false);
+             setBookmarkedArticles(articles);
+             setRefreshItems(false);
+             setIsLoading(false);
+           });
       };
 
       fetchBookmarks();
@@ -66,7 +69,7 @@ const BookmarkScreen = (props) => {
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color={theme.color.primary} />
-      ) : bookmarkedArticles.length > 0 ? (
+      ) : bookmarkedArticles?.length > 0 ? (
         <FlatList
           data={bookmarkedArticles}
           renderItem={(item, index) => renderRecommendedNewsItem(item, index)}

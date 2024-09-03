@@ -5,9 +5,9 @@ import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
-import theme from '../../styles/theme';
-import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
+import theme from '../../styles/theme'; 
 import moment from 'moment';
+import { addBookmark, isArticleBookmarked, removeBookmark } from '../services/SQLiteService';
 
 const ArticleScreen = props => {
   const {item, articleId} = props.route.params;
@@ -17,8 +17,7 @@ const ArticleScreen = props => {
   useEffect(() => {
     const checkBookmarkStatus = async () => {
       if (articleId) {
-        const bookmarked = await checkIsBookmarked(articleId);
-        setIsBookmarked(bookmarked);
+        isArticleBookmarked(articleId, setIsBookmarked);
       }
     };
     checkBookmarkStatus();
@@ -27,14 +26,13 @@ const ArticleScreen = props => {
   const toggleBookmark = () => {
     if (isBookmarked) {
       removeBookmark(articleId);
-      setIsBookmarked(false);
-      callBack(true);
+      setIsBookmarked(false); 
     } else {
-      addBookmark({
-        articleId,
-        item,
+      addBookmark(item, success => {
+        if (success) {
+          setIsBookmarked(true);
+        }
       });
-      setIsBookmarked(true);
     }
   };
 
@@ -59,7 +57,7 @@ const ArticleScreen = props => {
       ) : (
         <>
           <View style={styles.articleContainer}>
-            <ScrollView> 
+            <ScrollView>
               <Text style={styles.articleTitle}>{item?.title}</Text>
               {item.urlToImage && (
                 <Image
@@ -127,7 +125,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   profileImage: {
-    width: "100%",
+    width: '100%',
     height: '80%',
     borderRadius: theme.borderRadius,
     marginRight: 12,

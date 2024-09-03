@@ -1,4 +1,6 @@
 import SQLite from 'react-native-sqlite-storage';
+import auth from '@react-native-firebase/auth';
+import {generateUniqueId} from '../utils/uniqueArticleId';
 
 const db = SQLite.openDatabase(
   {
@@ -15,7 +17,7 @@ const db = SQLite.openDatabase(
 export const createTables = () => {
   db.transaction(txn => {
     // txn.executeSql(
-    //   `DROP TABLE IF EXISTS articles`,
+    //   `DROP TABLE IF EXISTS bookmarks`,
     //   [],
     //   () => {
     //     console.log('Old articles table dropped successfully');
@@ -59,6 +61,28 @@ export const createTables = () => {
         console.log('Error creating categories table: ', error);
       },
     );
+    txn.executeSql(
+      `CREATE TABLE IF NOT EXISTS bookmarks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId TEXT,
+        articleId TEXT,
+        title TEXT,
+        author TEXT,
+        publishedAt TEXT,
+        category TEXT,
+        url TEXT,
+        urlToImage TEXT,
+        content TEXT,
+        UNIQUE(userId, articleId)
+      );`,
+      [],
+      () => {
+        console.log('Bookmarks table created successfully');
+      },
+      error => {
+        console.log('Error creating bookmarks table: ', error);
+      },
+    );
   });
 };
 
@@ -80,7 +104,7 @@ export const insertArticles = (articles, category, query) => {
           query,
         ],
         () => {
-        //   console.log('Article inserted successfully');
+          //   console.log('Article inserted successfully');
         },
         error => {
           console.log('Error inserting article: ', error);
@@ -89,7 +113,6 @@ export const insertArticles = (articles, category, query) => {
     });
   });
 };
-
 
 // Fetch articles from the database
 export const getArticles = (category, query, callback) => {
@@ -184,6 +207,105 @@ export const clearTable = tableName => {
           `Error clearing records from the ${tableName} table: `,
           error,
         );
+      },
+    );
+  });
+};
+
+export const addBookmark = async (article, callback) => {
+  const userId = auth().currentUser.uid;
+  const articleId = generateUniqueId(article);
+
+  // Check if the article is already bookmarked
+  isArticleBookmarked(articleId, isBookmarked => {
+    if (isBookmarked) {
+      console.log('Article is already bookmarked');
+      if (callback) callback(false);
+      return;
+    }
+
+    // If not bookmarked, add it to the database
+    db.transaction(txn => {
+      txn.executeSql(
+        `INSERT OR IGNORE INTO bookmarks (userId, articleId, title, author, publishedAt, category, url, urlToImage, content) VALUES (?, ?, ?, ?, ?,?, ?, ?, ?)`,
+        [
+          userId,
+          articleId,
+          article.title,
+          article.author,
+          article.publishedAt,
+          article.category,
+          article.url,
+          article.urlToImage,
+          article.content,
+        ],
+        () => {
+          console.log('Bookmark added successfully');
+          if (callback) callback(true); 
+        },
+        error => {
+          console.log('Error adding bookmark: ', error);
+          if (callback) callback(false);  
+        },
+      );
+    });
+  });
+};
+
+export const isArticleBookmarked = (articleId, callback) => {
+  const userId = auth().currentUser.uid;
+
+  db.transaction(txn => {
+    txn.executeSql(
+      `SELECT * FROM bookmarks WHERE userId = ? AND articleId = ?`,
+      [userId, articleId],
+      (tx, results) => { 
+        if (results.rows.length > 0) {
+          callback(true);
+        } else {
+          callback(false);
+        }
+      },
+      error => {
+        console.log('Error checking bookmark status: ', error);
+      },
+    );
+  });
+};
+
+export const removeBookmark = articleId => {
+  const userId = auth().currentUser.uid;
+
+  db.transaction(txn => {
+    txn.executeSql(
+      `DELETE FROM bookmarks WHERE userId = ? AND articleId = ?`,
+      [userId, articleId],
+      () => {
+        console.log('Bookmark removed successfully');
+      },
+      error => {
+        console.log('Error removing bookmark: ', error);
+      },
+    );
+  });
+};
+
+export const getBookmarks = callback => {
+  const userId = auth().currentUser.uid;
+
+  db.transaction(txn => {
+    txn.executeSql(
+      `SELECT * FROM bookmarks WHERE userId = ? ORDER BY publishedAt DESC`,
+      [userId],
+      (tx, results) => {
+        let bookmarks = [];
+        for (let i = 0; i < results.rows.length; i++) {
+          bookmarks.push(results.rows.item(i));
+        }
+        callback(bookmarks);
+      },
+      error => {
+        console.log('Error fetching bookmarks: ', error);
       },
     );
   });

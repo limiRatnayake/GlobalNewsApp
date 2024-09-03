@@ -2,9 +2,14 @@ import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
+// import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
 import {generateUniqueId} from '../utils/uniqueArticleId';
 import theme from '../../styles/theme';
+import {
+  addBookmark,
+  isArticleBookmarked,
+  removeBookmark,
+} from '../services/SQLiteService';
 
 const NewsCard = ({
   index,
@@ -24,32 +29,26 @@ const NewsCard = ({
   const articleId = articleIdNo == '' ? generateUniqueId(article) : articleIdNo;
 
   useEffect(() => {
-    const checkBookmarkStatus = async () => { 
+    const checkBookmarkStatus = async () => {
       if (articleId) {
-        const bookmarked = await checkIsBookmarked(articleId);
-        setIsBookmarked(bookmarked);
+        isArticleBookmarked(articleId, setIsBookmarked); 
       }
     };
     checkBookmarkStatus();
   }, [articleId]);
 
-  const toggleBookmark =  () => {
+  const toggleBookmark = () => {
     if (isBookmarked) {
-       removeBookmark(articleId);
+      removeBookmark(articleId);
       setIsBookmarked(false);
       callBack(true);
     } else {
-       addBookmark({
-         articleId,
-         title,
-         timestamp,
-         userProfile,
-         urlToImage,
-         content: article?.content,
-         author: article?.author,
-       });
-      setIsBookmarked(true);
-    }
+      addBookmark(article, success => {
+        if (success) {
+          setIsBookmarked(true);
+        }
+      });
+    } 
   };
 
   return (

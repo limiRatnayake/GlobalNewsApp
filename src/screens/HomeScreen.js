@@ -62,8 +62,7 @@ const HomeScreen = props => {
 
   const getNewArticles = useCallback(
     async (page = 1) => {
-      setIsLoading(true);
-      console.log(page, 'p[age');
+      setIsLoading(true); 
       try {
         let newArticles = await fetchLatestNewsArticles(
           debouncedQuery,
