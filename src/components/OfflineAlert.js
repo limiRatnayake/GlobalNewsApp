@@ -31,38 +31,43 @@ const OfflineAlert = () => {
   }
 
   return (
-    <Modal transparent={true} visible={isOffline} animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.alertBox}>
-          <Text style={styles.title}>No Internet Connection</Text>
-        </View>
+    <View style={styles.alertContainer}>
+      <View style={styles.alertBox}>
+        <Text style={styles.title}>No Internet Connection</Text>
       </View>
-    </Modal>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  alertContainer: {
     position: 'absolute',
-    bottom: '10%',
-    width: '100%',
+    bottom: '5%',
+    left: 0,
+    right: 0, 
+    justifyContent: 'center',
+    alignItems: 'center', 
+    alignSelf: 'center',
+    zIndex: 1000, 
+    height: '8%', 
   },
   alertBox: {
     width: '80%',
     padding: 10,
     backgroundColor: theme.color.warning,
-    borderRadius: 10,
+    borderRadius: theme.borderRadius, 
     alignItems: 'center',
-    justifyContent: 'center',
+    elevation: 5, 
+    shadowColor: '#000',  
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold', 
     textAlign: 'center',
-    color: '#fff',
+    color: theme.color.white
   },
   message: {
     fontSize: 16,
