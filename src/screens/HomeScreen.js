@@ -38,6 +38,7 @@ const HomeScreen = props => {
     if (isFocused || networkAvailability) {
       setRecommendedArticles([]);
       setCurrentPage(1);
+      setIsLoading(true); 
       setHasMoreArticles(true);
       getNewArticles(1, debouncedQuery);
       dispatch(getTotalNotificationCount(0));
@@ -61,8 +62,7 @@ const HomeScreen = props => {
   }, [debouncedQuery]);
 
   const getNewArticles = useCallback(
-    async (page = 1) => {
-      setIsLoading(true); 
+    async (page ) => { 
       try {
         let newArticles = await fetchLatestNewsArticles(
           debouncedQuery,
@@ -86,8 +86,7 @@ const HomeScreen = props => {
       } finally {
         setIsLoading(false);
         setLoadingMore(false);
-        setCallNewsArticles(false);
-        setHasMoreArticles(false);
+        setCallNewsArticles(false); 
       }
     },
     [selectedOption, isLoading, hasMoreArticles, debouncedQuery],
@@ -173,15 +172,15 @@ const HomeScreen = props => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.verticalList}
           onEndReached={() => {
+            console.log(!loadingMore , hasMoreArticles, 'onEndReached');
             if (!loadingMore && hasMoreArticles) {
-              console.log(currentPage, 'onEndReached');
 
               setLoadingMore(true);
               setCurrentPage(prevPage => prevPage + 1);
               getNewArticles(currentPage);
             }
           }}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.9}
         />
       ) : (
         <View>
