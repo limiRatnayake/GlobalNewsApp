@@ -29,6 +29,8 @@ const HomeScreen = props => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMoreArticles, setHasMoreArticles] = useState(true);
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
   const {networkAvailability} = useSelector(state => state.loader);
   const {notificationCount} = useSelector(state => state.notification);
   const isFocused = useIsFocused();
@@ -48,12 +50,14 @@ const HomeScreen = props => {
   }, [isFocused, networkAvailability]);
 
   useEffect(() => {
+    console.log(fromDate, toDate, callNewsArticles);
+    
     if (callNewsArticles) {
       getNewArticles(1, debouncedQuery);
       setRecommendedArticles([]);
     }
-  }, [selectedOption]);
-
+  }, [selectedOption, fromDate, toDate]);
+ 
   useEffect(() => {
     setCurrentPage(1);
     setRecommendedArticles([]);
@@ -62,12 +66,14 @@ const HomeScreen = props => {
   }, [debouncedQuery]);
 
   const getNewArticles = useCallback(
-    async (page ) => { 
+    async page => {
       try {
         let newArticles = await fetchLatestNewsArticles(
           debouncedQuery,
           selectedOption,
           page,
+          fromDate,
+          toDate,
         );
         if (newArticles?.length > 0) {
           setRecommendedArticles(prevArticles => [
@@ -86,10 +92,10 @@ const HomeScreen = props => {
       } finally {
         setIsLoading(false);
         setLoadingMore(false);
-        setCallNewsArticles(false); 
+        setCallNewsArticles(false);
       }
     },
-    [selectedOption, isLoading, hasMoreArticles, debouncedQuery],
+    [selectedOption, isLoading, hasMoreArticles, debouncedQuery, fromDate, toDate],
   );
   const renderRecommendedNewsItem = ({item, index}) => {
     return (
@@ -117,9 +123,14 @@ const HomeScreen = props => {
     setModalVisible(false);
   };
 
-  const handleOptionSelect = option => {
-    setSelectedOption(option);
+  const handleOptionSelect = (option, fromDate, toDate) => {
+    console.log(option, fromDate, toDate);
     setCallNewsArticles(true);
+    setSelectedOption(option);
+    setFromDate(fromDate);
+    setToDate(toDate);
+    
+    
   };
 
   return (
@@ -160,7 +171,12 @@ const HomeScreen = props => {
           isFocused={isFocused}
           setDebouncedQuery={setDebouncedQuery}
         />
-        <SortingButton onPress={handleOpenModal} />
+        <SortingButton
+          onPress={handleOpenModal}
+          selectedOption={selectedOption}
+          fromDate={fromDate}
+          toDate={toDate}
+        />
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color={theme.color.primary} />
@@ -172,9 +188,8 @@ const HomeScreen = props => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.verticalList}
           onEndReached={() => {
-            console.log(!loadingMore , hasMoreArticles, 'onEndReached');
+            console.log(!loadingMore, hasMoreArticles, 'onEndReached');
             if (!loadingMore && hasMoreArticles) {
-
               setLoadingMore(true);
               setCurrentPage(prevPage => prevPage + 1);
               getNewArticles(currentPage);

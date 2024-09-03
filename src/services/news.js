@@ -25,16 +25,19 @@ const apiClient = axios.create({
 
 createTables();
 
-export const fetchLatestNewsArticles = async (q, sortBy, page) => {
+export const fetchLatestNewsArticles = async (q, sortBy, page, fromDate, toDate) => {
   const netInfo = await NetInfo.fetch();
   const query = q ? q : 'news';
 
   if (netInfo.isConnected) {
     try {
       const response = await apiClient.get(
-        `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}`,
+        `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}&from=${fromDate}&to=${toDate}`,
       );
       const articles = response.data.articles;
+console.log(
+  `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}&from=${fromDate}&to=${toDate}`,
+);
 
       // Insert articles into SQLite database
       insertArticles(articles, '', query);
