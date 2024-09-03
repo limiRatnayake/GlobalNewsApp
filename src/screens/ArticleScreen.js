@@ -1,19 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
-import theme from '../../styles/theme'; 
+import theme from '../../styles/theme';
 import moment from 'moment';
-import { addBookmark, isArticleBookmarked, removeBookmark } from '../services/SQLiteService';
+import {
+  addBookmark,
+  isArticleBookmarked,
+  removeBookmark,
+} from '../services/SQLiteService';
 
 const ArticleScreen = props => {
   const {item, articleId} = props.route.params;
   const {networkAvailability} = useSelector(state => state.loader);
   const [isBookmarked, setIsBookmarked] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const checkBookmarkStatus = async () => {
       if (articleId) {
@@ -26,7 +36,7 @@ const ArticleScreen = props => {
   const toggleBookmark = () => {
     if (isBookmarked) {
       removeBookmark(articleId);
-      setIsBookmarked(false); 
+      setIsBookmarked(false);
     } else {
       addBookmark(item, success => {
         if (success) {
@@ -53,7 +63,18 @@ const ArticleScreen = props => {
         </TouchableOpacity>
       </View>
       {networkAvailability ? (
-        <WebView source={{uri: item?.url}} style={{flex: 1}} />
+        <View style={{flex: 1}}>
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={theme.color.primary} />
+            </View>
+          )}
+          <WebView
+            source={{uri: item?.url}}
+            style={{flex: 1}} 
+            onLoadEnd={() => setLoading(false)}
+          />
+        </View>
       ) : (
         <>
           <View style={styles.articleContainer}>
@@ -142,6 +163,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     lineHeight: 24,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',  
+    zIndex: 1,
   },
 });
 
