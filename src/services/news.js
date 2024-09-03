@@ -1,19 +1,25 @@
 import axios from 'axios';
-import store from '../store/store'; 
+import store from '../store/store';
 import NetInfo from '@react-native-community/netinfo';
-import { createTables, getArticles, getArticlesByCategory, getCategories, insertArticles, insertCategories } from './SQLiteService';
+import {
+  createTables,
+  getArticles,
+  getArticlesByCategory,
+  getCategories,
+  insertArticles,
+  insertCategories,
+} from './SQLiteService';
+import {env} from '../environment/environment';
 
-const BASE_URL = 'https://newsapi.org/v2';
-// const API_KEY = '8c6acce3ead248a3adeefceda292e7c0';
-const API_KEY = '9b4f0227b89d44a99e651eab9e955be8';
-// const API_KEY = '9b4f0227b89d44a99e651eab9e955be8';
+const BASE_URL = env.BASE_URL;
+
 
 // Configure axios instance
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: '9b4f0227b89d44a99e651eab9e955be8',
+    Authorization: env.API_KEY,
   },
 });
 
@@ -42,7 +48,7 @@ export const fetchLatestNewsArticles = async (q, sortBy, page) => {
     return new Promise(resolve => {
       getArticles('', query, articles => {
         console.log(articles, 'articles');
-        
+
         resolve(articles);
       });
     });
@@ -82,7 +88,7 @@ export const fetchNewsBySources = async () => {
     return new Promise(resolve => {
       getCategories(categories => {
         console.log(categories, 'fetchNewsBySources');
-        
+
         resolve(categories);
       });
     });

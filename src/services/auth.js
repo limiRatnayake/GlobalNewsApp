@@ -2,6 +2,7 @@ import auth from '@react-native-firebase/auth';
 import {firebase} from '@react-native-firebase/app';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {saveUserData} from './user';
+import { env } from '../environment/environment';
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -16,8 +17,7 @@ if (!firebase.apps.length) {
 }
 
 GoogleSignin.configure({
-  webClientId:
-    '461150889136-ps02u0q83d2aea24bgm3rts45a299ajo.apps.googleusercontent.com',
+  webClientId: env.WEB_CLIENT_ID,
   offlineAccess: true,
 });
 
