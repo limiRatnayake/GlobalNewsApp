@@ -63,12 +63,16 @@ const LoginScreen = props => {
   };
 
   const handleGoogleSignIn = async () => {
-    console.log('toucghed');
-    setLoading(true);
     try {
       let userDetails = await signInWithGoogle();
       console.log(userDetails, 'userDetails');
-      setLoading(false);
+      if (!userDetails?.user) {
+        setShowErrorMessage({
+          reqFailed: userDetails.message
+            ? userDetails.message
+            : 'Something went wrong. Please try again later!',
+        });
+      }
     } catch (error) {
       setShowErrorMessage({
         reqFailed: 'Something went wrong. Please try again later!',

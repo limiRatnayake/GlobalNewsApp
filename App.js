@@ -24,9 +24,9 @@ function App() {
     notificationListener(); 
   }, []);
 
-  console.log = () => {};
-  console.warn = () => {};
-  console.error = () => {};
+  // console.log = () => {};
+  // console.warn = () => {};
+  // console.error = () => {};
   return (
     <Provider store={store}>
       <SafeAreaView style={globalStyles.mainContainer}>

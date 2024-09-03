@@ -4,7 +4,7 @@ import {signOut} from './auth';
 import store from '../store/store';
 import {setIsBookmarked} from '../store/reducers/articleSlice';
 
-export const saveUserData = async user => {
+export const saveUserData = async (user, displayName, termsAccepted) => {
   if (!user || !user.uid) {
     console.error('User is not authenticated.');
     await signOut();
@@ -16,8 +16,9 @@ export const saveUserData = async user => {
     const doc = await userDocRef.get();
     if (!doc.exists) {
       await userDocRef.set({
-        name: user.displayName || '',
+        name: user.displayName || displayName,
         email: user.email,
+        termsAccepted: termsAccepted,
         createdAt: firestore.FieldValue.serverTimestamp(),
       });
     }

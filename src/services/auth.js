@@ -28,7 +28,6 @@ export const signInWithEmail = async (email, password) => {
       email,
       password,
     );
-    await saveUserData(userCredential.user);
     return userCredential.user;
   } catch (error) {
     console.log('Error signing in with email and password:', error);
@@ -37,17 +36,27 @@ export const signInWithEmail = async (email, password) => {
 };
 
 // sign up with email and password
-export const signUpWithEmail = async (email, password, name, termsAccepted) => {
+export const signUpWithEmail = async (
+  email,
+  password,
+  displayName,
+  termsAccepted,
+) => {
   try {
     const userCredential = await auth().createUserWithEmailAndPassword(
       email,
       password,
-      name,
-      termsAccepted,
     );
-    console.log(userCredential, 'userCredential');
-    
-    await saveUserData(userCredential.user);
+    console.log(
+      userCredential,
+      email,
+      password,
+      displayName,
+      termsAccepted,
+      'userCredential',
+    );
+
+    await saveUserData(userCredential.user, displayName, termsAccepted);
     return userCredential;
   } catch (error) {
     console.log('Error signing up:', error);
@@ -63,8 +72,8 @@ export const signInWithGoogle = async () => {
 
     const userCredential = await auth().signInWithCredential(googleCredential);
     console.log(userCredential.user, 'userCredential');
-    await saveUserData(userCredential.user);
-    return userCredential.user;
+    await saveUserData(userCredential.user, '');
+    return userCredential;
   } catch (error) {
     console.log('Error signing in with Google:', error);
     return handleFirebaseAuthError(error);
@@ -74,9 +83,15 @@ export const signInWithGoogle = async () => {
 //Logout
 export const signOut = async () => {
   try {
+   const user = auth().currentUser; 
+   if (
+     user &&
+     user.providerData.some(provider => provider.providerId === 'google.com')
+   ) {
+     await GoogleSignin.revokeAccess();
+     await GoogleSignin.signOut();
+   }
     await auth().signOut();
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
     return true;
   } catch (error) {
     console.log('Error signing out:', error);
@@ -109,5 +124,5 @@ const handleFirebaseAuthError = error => {
       errorMessage = 'An unknown error occurred. Please try again later.';
       break;
   }
-  return new Error(errorMessage);  
+  return new Error(errorMessage);
 };

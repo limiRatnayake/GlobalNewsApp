@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import globalStyles from '../../styles/GlobalStyles';
@@ -17,8 +18,10 @@ import {
   validatePassword,
 } from '../utils/validation';
 import {signUpWithEmail} from '../services/auth';
+import theme from '../../styles/theme';
 
 const SignUpScreen = props => {
+  const [loading, setLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -44,7 +47,7 @@ const SignUpScreen = props => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
     const confirmPasswordError = passwordsMatch(password, confirmPassword);
-
+    setLoading(true);
     if (
       nameError ||
       emailError ||
@@ -59,13 +62,27 @@ const SignUpScreen = props => {
         confirmPassword: confirmPasswordError,
         terms: 'You must agree to the terms and conditions',
       });
+        setLoading(false);
       return;
     }
 
     try {
       const user = await signUpWithEmail(email, password, name, termsAccepted);
+      if (!user.user) {
+        setShowErrorMessage({
+          name: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          terms: ' ',
+          reqFailed: user.message
+            ? user.message
+            : 'Something went wrong. Please try again later!',
+        });
+      }
+
+       setLoading(false);
       console.log(user, 'USER SIGNUP');
- 
     } catch (error) {
       setShowErrorMessage({
         name: '',
@@ -73,8 +90,11 @@ const SignUpScreen = props => {
         password: '',
         confirmPassword: '',
         terms: ' ',
-        reqFailed: error ? error :'Something went wrong. Please try again later!',
+        reqFailed: error
+          ? error
+          : 'Something went wrong. Please try again later!',
       });
+       setLoading(false);
     }
   };
 
@@ -216,11 +236,18 @@ const SignUpScreen = props => {
         )}
         <TouchableOpacity
           style={globalStyles.button}
+          disabled={loading}
           onPress={() => handleSignUp()}>
-          <Text style={globalStyles.buttonText}>Sign up</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color={theme.color.white} />
+          ) : (
+            <Text style={globalStyles.buttonText}>Sign up</Text>
+          )}
         </TouchableOpacity>
 
-        <Text style={styles.loginText}>
+        <Text
+          style={styles.loginText}
+          onPress={() => props.navigation.navigate('Login')}>
           Already a member? <Text style={styles.linkText}>Login now</Text>
         </Text>
       </View>

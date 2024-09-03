@@ -183,12 +183,12 @@ const ProfileScreen = props => {
           </React.Fragment>
         )}
       </ScrollView>
-
       <TouchableOpacity
         style={globalStyles.button}
         onPress={() => logoutUser()}>
         <Text style={globalStyles.buttonText}>Logout</Text>
       </TouchableOpacity>
+
     </View>
   );
 };
