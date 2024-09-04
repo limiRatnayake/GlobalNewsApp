@@ -1,7 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
-import todosReducer from '../features/todos/todosSlice';
-import filtersReducer from '../features/filters/filtersSlice';
 
-export const store = configureStore({
-  reducer: {},
+import rootReducers from './reducers';
+import {thunk} from 'redux-thunk';
+
+const store = configureStore({
+  reducer: rootReducers,
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(thunk),
 });
+
+export default store;

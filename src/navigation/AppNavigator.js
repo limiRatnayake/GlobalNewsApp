@@ -1,16 +1,36 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
-
-const Stack = createNativeStackNavigator();
+import MainNavigator from './MainNavigator';
+import AuthNavigator from './AuthNavigator';
+import auth from '@react-native-firebase/auth';
+import BootSplash from 'react-native-bootsplash';
 
 const AppNavigator = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    //listen to the authChange
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;  
+  }, []);
+
+  const onAuthStateChanged = user => {
+    setUser(user);
+    if (user) {
+      console.log('User is signed in with email:', user.email);
+ 
+      user.getIdToken().then(token => {
+        // console.log('User token:', token);
+      });
+    } else {
+      console.log('User is signed out');
+      setUser(null);
+    }
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
+    <NavigationContainer onReady={() => BootSplash.hide({fade: true})}>
+      {user ? <MainNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 };

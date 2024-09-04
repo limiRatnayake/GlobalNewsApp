@@ -1,79 +1,92 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Global News React Native Application
 
-# Getting Started
+A mini mobile application using the Global News API to fetch and display news articles. This project is intended for showcasing skills in mobile development, UI/UX design, and React Native with Android native methodologies.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Installation and Setup
 
-## Step 1: Start the Metro Server
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/limiRatnayake/GlobalNewsApp.git
+   cd GlobalNewsApp
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+2. **Install dependencies using Yarn:**
+   ```bash
+   yarn install
 
-To start Metro, run the following command from the _root_ of your React Native project:
+3. **Connect your device or emulator:**
+   Ensure that your Android device is connected or your emulator is running.
+   ```bash 
+   adb devices
 
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+4. **Run the application:**
+  ```bash 
+  adb reverse tcp:8081 tcp:8081
+yarn start 
 ```
 
-## Step 2: Start your Application
+## Download App (APK) 
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+[**Download Global News App…**](https://github.com/limiRatnayake/GlobalNewsApp/releases/tag/v1.0.0)
 
-### For Android
 
-```bash
-# using npm
-npm run android
+## Features
 
-# OR using Yarn
-yarn android
-```
+- **Splash Screen:** An attractive splash screen that appears when the application is launched.
+- **User Authentication:**
+  - **Normal Login:** Basic login system using email and password.
+  - **Google Login:** Login using Google authentication.
+  - **Register:** Provides functionality for new users to create an account.
+- **News Searching:** Search for news articles using keywords.
+- **Sorting:** Options to sort news articles by popularity, relevance, publishedAt & filter by date.
+- **News Categories:** Display news articles based on categories such as Technology, Sports, and Business.
+- **Bookmarking:** Users can bookmark their favorite articles for easy access.
+- **Push Notifications:** Users receive notifications about new and important news articles.
+- **Offline Access:** Enhance the app by enabling it to cache news articles, allowing users to access and read them even when they are offline.
 
-### For iOS
+## Screens
 
-```bash
-# using npm
-npm run ios
+1. **Splash Screen:** Displayed on app launch.
+2. **Login Screen:** Allows user login with email/password or Google account.
+3. **Register Screen:** Allows user to register with email, password.
+4. **Home Screen:** Displays the latest news articles.
+5. **Search Component:** Users can search for news articles.
+6. **Category Screen:** Displays articles filtered by category.
+7. **Article Detail Screen:** Displays the full content of a selected news article & when offline show unformatted content of the article.
+8. **Bookmarks Screen:** Lists all bookmarked articles.
+9. **Notification Screen:** Lists all notification received.
+10. **Profile Screen:** User can change there info.
 
-# OR using Yarn
-yarn ios
-```
+## Technical Stack
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+- **Framework:** React Native
+- **State Management:** Redux Toolkit
+- **Navigation:** React Navigation
+- **API:** Axios for networking with the Global News API
+- **Authentication:** Firebase Authentication for email/password and Google Sign-In 
+- **Database:** Firebase Cloud Firestore & SQLite
+- **Notification:** Firebase Messaging & React Native Push Notifications
+- **Offline Suport:** SQLite for storing structured data locally on the device, providing fast access to large amounts of data, and managing offline capabilities efficiently
+ 
+## Other libraries 
+- **crypto-js:** library to generate unique ID values
+- **react-native-bootsplash:** library to create splash screen
+- **react-native-push-notification:** manage and deliver push notifications seamlessly
+- **react-native-webview:** Used to load and display articles within the app
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+## Architecture
 
-## Step 3: Modifying your App
+- **Pattern:** MVVM (Model-View-ViewModel)
+- **State Management:** Redux for state management
 
-Now that you have successfully run the app, let's modify it.
+## Native Integration
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+- **Note:** Android native methodologies (e.g., Fragments) were planned but are not implemented in this version. Future updates may include these features.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
 
-## Congratulations! :tada:
+## Screenshots
 
-You've successfully run and modified your React Native App. :partying_face:
+![Main Screens](assets/screenshots/main_screens.png) 
 
-### Now what?
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
 
-# Troubleshooting
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
