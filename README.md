@@ -37,7 +37,7 @@ yarn start
   - **Google Login:** Login using Google authentication.
   - **Register:** Provides functionality for new users to create an account.
 - **News Searching:** Search for news articles using keywords.
-- **Sorting:** Options to sort news articles by popularity, relevance, publishedAt.
+- **Sorting:** Options to sort news articles by popularity, relevance, publishedAt & filter by date.
 - **News Categories:** Display news articles based on categories such as Technology, Sports, and Business.
 - **Bookmarking:** Users can bookmark their favorite articles for easy access.
 - **Push Notifications:** Users receive notifications about new and important news articles.
@@ -65,7 +65,7 @@ yarn start
 - **Authentication:** Firebase Authentication for email/password and Google Sign-In 
 - **Database:** Firebase Cloud Firestore & SQLite
 - **Notification:** Firebase Messaging & React Native Push Notifications
-- **Offline Suport:** storing structured data locally on the device, providing fast access to large amounts of data, and managing offline capabilities efficiently
+- **Offline Suport:** SQLite for storing structured data locally on the device, providing fast access to large amounts of data, and managing offline capabilities efficiently
  
 ## Other libraries 
 - **crypto-js:** library to generate unique ID values
