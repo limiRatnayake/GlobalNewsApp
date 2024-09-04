@@ -20,16 +20,17 @@ export async function requestUserPermission() {
 }
 
 // Get FCM Token
-async function getFCMToken() {
+export async function getFCMToken() {
   const token = await messaging().getToken();
   if (token) {
     console.log('FCM Token:', token); 
+    return token
   } else {
     console.log('Failed to get FCM token');
   }
 }
 
-async function storeNotification(notification) { 
+export async function storeNotification(notification) { 
   //store notification
   try {
     const storedNotifications = await AsyncStorage.getItem('notifications');

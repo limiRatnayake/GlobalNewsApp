@@ -1,8 +1,16 @@
 import auth from '@react-native-firebase/auth';
-import {firebase} from '@react-native-firebase/app';
+import firebase from '@react-native-firebase/app';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {saveUserData, syncBookmarksWithFirestore} from './user';
-import { env } from '../environment/environment';
+import {env} from '../environment/environment';
+import {
+  getFCMToken,
+  sendNotification,
+  storeNotification,
+} from './notifications';
+import firestore from '@react-native-firebase/firestore';
+import PushNotification from 'react-native-push-notification';
+import {notificationService} from './pushNotification';
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -28,8 +36,20 @@ export const signInWithEmail = async (email, password) => {
       email,
       password,
     );
-     syncBookmarksWithFirestore();
-    return userCredential.user;
+    const user = userCredential.user;
+    const fcmToken = await getFCMToken();
+    await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .set({fcmToken}, {merge: true});
+    let message = {
+      title: 'Global News Alert',
+      message: 'Morning news brief..',
+    };
+    notificationService.sendNotification(message);
+    storeNotification(message);
+    syncBookmarksWithFirestore();
+    return user;
   } catch (error) {
     console.log('Error signing in with email and password:', error);
     return handleFirebaseAuthError(error);
@@ -56,8 +76,20 @@ export const signUpWithEmail = async (
       termsAccepted,
       'userCredential',
     );
-
     await saveUserData(userCredential.user, displayName, termsAccepted);
+    const user = userCredential.user;
+    const fcmToken = await getFCMToken();
+    await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .set({fcmToken}, {merge: true});
+    let message = {
+      title: 'Global News Alert',
+      message: 'Morning news brief..',
+    };
+    notificationService.sendNotification(message);
+    storeNotification(message);
+    
     return userCredential;
   } catch (error) {
     console.log('Error signing up:', error);
@@ -72,7 +104,18 @@ export const signInWithGoogle = async () => {
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
     const userCredential = await auth().signInWithCredential(googleCredential);
-    console.log(userCredential.user, 'userCredential');
+    const user = userCredential.user;
+    const fcmToken = await getFCMToken();
+    await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .set({fcmToken}, {merge: true});
+    let message = {
+      title: 'Global News Alert',
+      message: 'Morning news brief..',
+    };
+    notificationService.sendNotification(message);
+    storeNotification(message);
     await saveUserData(userCredential.user, '');
     syncBookmarksWithFirestore();
     return userCredential;
@@ -85,14 +128,14 @@ export const signInWithGoogle = async () => {
 //Logout
 export const signOut = async () => {
   try {
-   const user = auth().currentUser; 
-   if (
-     user &&
-     user.providerData.some(provider => provider.providerId === 'google.com')
-   ) {
-     await GoogleSignin.revokeAccess();
-     await GoogleSignin.signOut();
-   }
+    const user = auth().currentUser;
+    if (
+      user &&
+      user.providerData.some(provider => provider.providerId === 'google.com')
+    ) {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    }
     await auth().signOut();
     return true;
   } catch (error) {

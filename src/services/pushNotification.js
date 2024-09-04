@@ -51,6 +51,18 @@ class NotificationService {
       vibrate: true,
     });
   }
+  
+  sendNotification(message) {
+    PushNotification.localNotification({
+      channelId: 'default-channel-id',
+      title: message.title,
+      message: message.message,
+      playSound: true,
+      soundName: 'default',
+      importance: 'high',
+      vibrate: true,
+    });
+  }
 }
 
 export const notificationService = new NotificationService();

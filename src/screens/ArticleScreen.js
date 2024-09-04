@@ -71,7 +71,8 @@ const ArticleScreen = props => {
           )}
           <WebView
             source={{uri: item?.url}}
-            style={{flex: 1}} 
+            style={{flex: 1}}
+            onLoadProgress={() => setLoading(false)}
             onLoadEnd={() => setLoading(false)}
           />
         </View>
