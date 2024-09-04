@@ -15,8 +15,8 @@ import {fetchNewsBySources, fetchNewsByCategory} from '../services/news';
 import {useDispatch, useSelector} from 'react-redux';
 import {addCategoryList} from '../store/actions/categoryAction';
 import {useIsFocused} from '@react-navigation/native';
-import theme from '../../styles/theme';
-const categories = ['All News', 'Sports', 'Technology', 'Business'];
+import theme from '../../styles/theme'; 
+
 const DiscoverScreen = props => {
   const [newsByCategory, setNewsByCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(0);

@@ -18,17 +18,7 @@ const db = SQLite.openDatabase(
 
 //Create necessary tables
 export const createTables = () => {
-  db.transaction(txn => {
-    // txn.executeSql(
-    //   `DROP TABLE IF EXISTS bookmarks`,
-    //   [],
-    //   () => {
-    //     console.log('Old articles table dropped successfully');
-    //   },
-    //   error => {
-    //     console.log('Error dropping old articles table: ', error);
-    //   },
-    // );
+  db.transaction(txn => { 
     txn.executeSql(
       `CREATE TABLE IF NOT EXISTS articles (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -194,7 +184,7 @@ export const getCategories = callback => {
     );
   });
 };
-
+// clear the table
 export const clearTable = tableName => {
   db.transaction(txn => {
     txn.executeSql(
@@ -215,6 +205,7 @@ export const clearTable = tableName => {
   });
 };
 
+//add bookmark
 export const addBookmark = async (article, callback) => {
   const userId = auth().currentUser.uid;
   const articleId = generateUniqueId(article);

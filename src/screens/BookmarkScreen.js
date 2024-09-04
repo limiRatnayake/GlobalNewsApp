@@ -2,17 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  Text, 
   View,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+} from 'react-native'; 
 import NewsCard from '../components/NewsCard';
 import styles from '../../styles/HomeScreen';
 import globalStyles from '../../styles/GlobalStyles';
-// import {getBookmarks} from '../services/user';
 import {useIsFocused} from '@react-navigation/native';
 import theme from '../../styles/theme';
 import { getBookmarks } from '../services/SQLiteService';
@@ -27,8 +23,7 @@ const BookmarkScreen = (props) => {
     setIsLoading(true);
     if (isFocused || refreshItems) {
       const fetchBookmarks =  () => {
-           getBookmarks(articles => {
-             // const articles = await getBookmarks();
+           getBookmarks(articles => { 
              console.log(articles, 'fetchBookmarks');
 
              setBookmarkedArticles(articles);

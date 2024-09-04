@@ -7,8 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-} from 'react-native';
-import auth from '@react-native-firebase/auth';
+} from 'react-native'; 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {resetPassword} from '../services/user';
 import globalStyles from '../../styles/GlobalStyles';

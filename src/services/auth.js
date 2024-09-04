@@ -4,12 +4,10 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {saveUserData, syncBookmarksWithFirestore} from './user';
 import {env} from '../environment/environment';
 import {
-  getFCMToken,
-  sendNotification,
+  getFCMToken, 
   storeNotification,
 } from './notifications';
-import firestore from '@react-native-firebase/firestore';
-import PushNotification from 'react-native-push-notification';
+import firestore from '@react-native-firebase/firestore'; 
 import {notificationService} from './pushNotification';
 
 if (!firebase.apps.length) {

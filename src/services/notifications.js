@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import messaging from '@react-native-firebase/messaging';
-import {Alert} from 'react-native';
+import messaging from '@react-native-firebase/messaging'; 
 import { getTotalNotificationCount } from '../store/actions/notificationAction'; 
 import store from '../store/store';
 import { notificationService } from './pushNotification';

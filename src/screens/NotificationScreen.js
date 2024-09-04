@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import messaging from '@react-native-firebase/messaging';
+import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native'; 
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import theme from '../../styles/theme';
@@ -11,7 +10,6 @@ import { deleteNotification, getNotifications } from '../services/user';
 const NotificationScreen = props => {
   const [notifications, setNotifications] = useState([]);
   const {notificationCount} = useSelector(state => state.notification);
-  const dispatch = useDispatch();
 
   const loadNotifications = async () => {
     try {

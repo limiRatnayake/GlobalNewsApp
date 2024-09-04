@@ -23,9 +23,7 @@ const ProfileScreen = props => {
   const [loading, setLoading] = useState('');
   const [saveLoading, setSaveLoading] = useState('');
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [email, setEmail] = useState(''); 
   const [showErrorMessage, setShowErrorMessage] = useState({
     name: '',
     email: '',

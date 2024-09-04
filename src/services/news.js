@@ -1,5 +1,4 @@
-import axios from 'axios';
-import store from '../store/store';
+import axios from 'axios'; 
 import NetInfo from '@react-native-community/netinfo';
 import {
   createTables,
@@ -35,9 +34,6 @@ export const fetchLatestNewsArticles = async (q, sortBy, page, fromDate, toDate)
         `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}&from=${fromDate}&to=${toDate}`,
       );
       const articles = response.data.articles;
-console.log(
-  `/everything?pageSize=10&page=${page}&q=${query}&sortBy=${sortBy}&from=${fromDate}&to=${toDate}`,
-);
 
       // Insert articles into SQLite database
       insertArticles(articles, '', query);
