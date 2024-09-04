@@ -124,6 +124,7 @@ const SignUpScreen = props => {
                   : globalStyles.input,
               ]}
               placeholder="Enter your name"
+              placeholderTextColor="gray"
               onChangeText={text => {
                 setName(text);
                 setShowErrorMessage(prev => ({...prev, name: ''}));
@@ -144,6 +145,7 @@ const SignUpScreen = props => {
                   ? globalStyles.inputError
                   : globalStyles.input,
               ]}
+              placeholderTextColor="gray"
               placeholder="name@email.com"
               keyboardType="email-address"
               onChangeText={text => {
@@ -170,6 +172,7 @@ const SignUpScreen = props => {
                 style={globalStyles.inputWithIcon}
                 placeholder="Create a password"
                 secureTextEntry={!passwordVisible}
+                placeholderTextColor="gray"
                 onChangeText={text => {
                   setPassword(text);
                   setShowErrorMessage(prev => ({...prev, password: ''}));
@@ -194,6 +197,7 @@ const SignUpScreen = props => {
               <TextInput
                 style={globalStyles.inputWithIcon}
                 placeholder="Confirm password"
+                placeholderTextColor="gray"
                 secureTextEntry={!confirmPasswordVisible}
                 onChangeText={text => {
                   setConfirmPassword(text);

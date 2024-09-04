@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: 'gray',
   },
   footer: {
     flexDirection: 'row',

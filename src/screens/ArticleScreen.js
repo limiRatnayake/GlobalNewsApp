@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: 'gray',
   },
   articleMetaContainer: {
     flexDirection: 'row',
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',  
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     zIndex: 1,
   },
 });

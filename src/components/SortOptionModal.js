@@ -75,7 +75,7 @@ const SortOptionsModal = ({visible, onClose, onSelectOption}) => {
               </TouchableOpacity>
             </View>
             <View style={{marginBottom: '5%'}}>
-              <Text>Choose a sort option</Text>
+              <Text style={{color: 'gray'}}>Choose a sort option</Text>
             </View>
             {(selectedOption || fromDate || toDate) && (
               <TouchableOpacity
@@ -106,7 +106,7 @@ const SortOptionsModal = ({visible, onClose, onSelectOption}) => {
               <Text style={styles.modalTitle}>Filter</Text>
             </View>
             <View style={{marginBottom: '5%'}}>
-              <Text>Select from & to date to filter</Text>
+              <Text color>Select from & to date to filter</Text>
             </View>
             <View style={styles.dateFilterContainer}>
               <TouchableOpacity
@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
+    color: 'gray',
   },
   dateFilterContainer: {
     marginBottom: '5%',

@@ -127,6 +127,7 @@ const ProfileScreen = props => {
                       : globalStyles.input,
                   ]}
                   value={name}
+                  placeholderTextColor="gray"
                   placeholder="Enter your name"
                   onChangeText={text => {
                     setName(text);
@@ -149,6 +150,7 @@ const ProfileScreen = props => {
                       : globalStyles.input,
                   ]}
                   value={email}
+                  placeholderTextColor="gray"
                   placeholder="name@email.com"
                   keyboardType="email-address"
                   onChangeText={text => {
@@ -175,7 +177,14 @@ const ProfileScreen = props => {
               style={globalStyles.buttonWithBorder}
               onPress={() => saveUserDetails()}>
               <Text style={globalStyles.buttonWithBorderText}>
-                {saveLoading ? <ActivityIndicator size={'small'} color={theme.color.primary} /> : 'Save Changes'}
+                {saveLoading ? (
+                  <ActivityIndicator
+                    size={'small'}
+                    color={theme.color.primary}
+                  />
+                ) : (
+                  'Save Changes'
+                )}
               </Text>
             </TouchableOpacity>
           </React.Fragment>
@@ -186,7 +195,6 @@ const ProfileScreen = props => {
         onPress={() => logoutUser()}>
         <Text style={globalStyles.buttonText}>Logout</Text>
       </TouchableOpacity>
-
     </View>
   );
 };

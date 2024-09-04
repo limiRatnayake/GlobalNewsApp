@@ -102,6 +102,7 @@ const LoginScreen = props => {
                   : globalStyles.input,
               ]}
               placeholder="name@email.com"
+              placeholderTextColor="gray"
               keyboardType="email-address"
               onChangeText={text => {
                 setEmail(text);
@@ -122,6 +123,7 @@ const LoginScreen = props => {
               <TextInput
                 style={globalStyles.inputWithIcon}
                 placeholder="Password"
+                placeholderTextColor="gray"
                 secureTextEntry={!passwordVisible}
                 onChangeText={text => {
                   setPassword(text);

@@ -58,6 +58,7 @@ const ForgotPasswordScreen = props => {
         ]}
         placeholder="name@email.com"
         keyboardType="email-address"
+        placeholderTextColor="gray"
         onChangeText={text => {
           setEmail(text);
           setMessage('');

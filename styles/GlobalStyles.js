@@ -49,6 +49,7 @@ const globalStyles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: theme.color.white,
     fontFamily: theme.fonts.regular,
+    color: theme.color.black,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -65,6 +66,7 @@ const globalStyles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     paddingRight: 10,
+    color: theme.color.black,
   },
   inputErrorContainer: {
     flexDirection: 'row',
@@ -84,6 +86,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: theme.borderRadius,
     backgroundColor: theme.color.white,
     fontFamily: theme.fonts.regular,
+    color: theme.color.black,
   },
   divider: {
     height: 1,
