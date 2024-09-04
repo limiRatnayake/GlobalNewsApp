@@ -3,7 +3,14 @@ import firestore from '@react-native-firebase/firestore';
 import {signOut} from './auth';
 import store from '../store/store';
 import {setIsBookmarked} from '../store/reducers/articleSlice';
-import {addBookmark, getBookmarks, initialBookmarkAdded, isArticleBookmarked} from './SQLiteService';
+import {
+  addBookmark,
+  getBookmarks,
+  initialBookmarkAdded,
+  isArticleBookmarked,
+} from './SQLiteService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getTotalNotificationCount} from '../store/actions/notificationAction';
 
 export const saveUserData = async (user, displayName, termsAccepted) => {
   if (!user || !user.uid) {
@@ -97,7 +104,7 @@ export const addBookmarksToFirebase = async (article, articleId) => {
     return;
   }
   let docExists = await checkIsBookmarked(articleId);
-  if (!docExists) { 
+  if (!docExists) {
     try {
       const bookmarkRef = firestore()
         .collection('users')
@@ -138,6 +145,7 @@ export const checkIsBookmarked = async articleIdNew => {
   }
 };
 
+//remove bookmarks from firebase
 export const removeBookmarkFromFirestore = async articleId => {
   const userId = auth().currentUser?.uid;
   if (!userId) {
@@ -159,6 +167,7 @@ export const removeBookmarkFromFirestore = async articleId => {
   }
 };
 
+//initially set bookmarks to SQLite
 export const syncBookmarksWithFirestore = async () => {
   const userId = auth().currentUser?.uid;
   if (!userId) {
@@ -175,8 +184,82 @@ export const syncBookmarksWithFirestore = async () => {
 
     const bookmarks = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
     bookmarks.forEach(bookmark => {
-      initialBookmarkAdded(bookmark);  
+      initialBookmarkAdded(bookmark);
     });
+  } catch (error) {
+    console.error('Error fetching bookmarks:', error);
+    return [];
+  }
+};
+
+export const addNotification = async notification => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+
+  try {
+    await firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .add(notification);
+    console.log('Notification added successfully: firestroe', notification);
+  } catch (error) {
+    console.log('Error adding notification:', error);
+  }
+};
+
+export const deleteNotification = async notification => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+
+  try {
+    const userNotificationsRef = firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('notifications');
+
+    const snapshot = await userNotificationsRef.get();
+    const batch = firestore().batch();
+
+    snapshot.forEach(doc => {
+      batch.delete(doc.ref);
+    });
+
+    await batch.commit();
+    console.log('Notification deleted successfully: firestroe');
+  } catch (error) {
+    console.log('Error deleted notification:', error);
+  }
+};
+
+export const getNotifications = async () => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
+  await AsyncStorage.setItem('notifications', JSON.stringify([]));
+  try {
+    const snapshot = await firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('notifications') 
+      .get();
+
+    const notifications = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log(notifications, 'notifications');
+
+    await AsyncStorage.setItem('notifications', JSON.stringify(notifications));
+    store.dispatch(getTotalNotificationCount(notifications.length));
+    return notifications;
   } catch (error) {
     console.error('Error fetching bookmarks:', error);
     return [];

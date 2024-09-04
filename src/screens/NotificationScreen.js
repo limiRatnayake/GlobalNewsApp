@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import theme from '../../styles/theme';
 import globalStyles from '../../styles/GlobalStyles';
 import {useDispatch, useSelector} from 'react-redux';
+import { deleteNotification, getNotifications } from '../services/user';
 
 const NotificationScreen = props => {
   const [notifications, setNotifications] = useState([]);
@@ -14,9 +15,11 @@ const NotificationScreen = props => {
 
   const loadNotifications = async () => {
     try {
-      const storedNotifications = await AsyncStorage.getItem('notifications');
+      const storedNotifications = await getNotifications();
+      console.log(storedNotifications, 'storedNotifications');
+      
       if (storedNotifications) {
-        setNotifications(JSON.parse(storedNotifications));
+        setNotifications( storedNotifications);
       }
     } catch (error) {
       console.error('Failed to load notifications:', error);
@@ -26,6 +29,7 @@ const NotificationScreen = props => {
   const deleteNotifications = async () => {
     try {
       await AsyncStorage.removeItem('notifications');
+      await deleteNotification()
       setNotifications([]);
     } catch (error) {
       console.log('Failed to load notifications:', error);

@@ -4,6 +4,7 @@ import {Alert} from 'react-native';
 import { getTotalNotificationCount } from '../store/actions/notificationAction'; 
 import store from '../store/store';
 import { notificationService } from './pushNotification';
+import { addNotification } from './user';
  
 // Request user permission for notifications
 export async function requestUserPermission() {
@@ -38,6 +39,7 @@ async function storeNotification(notification) {
     notifications.push(notification);
     await AsyncStorage.setItem('notifications', JSON.stringify(notifications));
     store.dispatch(getTotalNotificationCount(notifications.length))
+    addNotification(notification);
     notificationService.showNotification(
       notification.title,
       notification.message,
