@@ -3,6 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 import {signOut} from './auth';
 import store from '../store/store';
 import {setIsBookmarked} from '../store/reducers/articleSlice';
+import {addBookmark, getBookmarks, initialBookmarkAdded, isArticleBookmarked} from './SQLiteService';
 
 export const saveUserData = async (user, displayName, termsAccepted) => {
   if (!user || !user.uid) {
@@ -85,5 +86,99 @@ export const resetPassword = async email => {
     }
   } catch (error) {
     throw error;
+  }
+};
+
+// add bookmark
+export const addBookmarksToFirebase = async (article, articleId) => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+  let docExists = await checkIsBookmarked(articleId);
+  if (!docExists) { 
+    try {
+      const bookmarkRef = firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('bookmarks')
+        .doc(articleId);
+
+      await bookmarkRef.set({
+        ...article,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+      console.log('Bookmark added successfully: firestroe', articleId);
+    } catch (error) {
+      console.log('Error adding bookmark:', error, article);
+    }
+  }
+};
+
+export const checkIsBookmarked = async articleIdNew => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+  try {
+    const bookmarkRef = firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('bookmarks')
+      .doc(articleIdNew);
+
+    const doc = await bookmarkRef.get();
+    console.log(' checking bookmark status:', doc.exists);
+    return doc.exists;
+  } catch (error) {
+    console.log('Error checking bookmark status:', error);
+    return false;
+  }
+};
+
+export const removeBookmarkFromFirestore = async articleId => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    await signOut();
+    return;
+  }
+
+  try {
+    const bookmarkRef = firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('bookmarks')
+      .doc(articleId);
+
+    await bookmarkRef.delete();
+    console.log('Bookmark removed successfully : firestroe', articleId);
+  } catch (error) {
+    console.error('Error removing bookmark:', error);
+  }
+};
+
+export const syncBookmarksWithFirestore = async () => {
+  const userId = auth().currentUser?.uid;
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
+
+  try {
+    const snapshot = await firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('bookmarks')
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const bookmarks = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    bookmarks.forEach(bookmark => {
+      initialBookmarkAdded(bookmark);  
+    });
+  } catch (error) {
+    console.error('Error fetching bookmarks:', error);
+    return [];
   }
 };

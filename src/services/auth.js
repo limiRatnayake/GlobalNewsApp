@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import {firebase} from '@react-native-firebase/app';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {saveUserData} from './user';
+import {saveUserData, syncBookmarksWithFirestore} from './user';
 import { env } from '../environment/environment';
 
 if (!firebase.apps.length) {
@@ -28,6 +28,7 @@ export const signInWithEmail = async (email, password) => {
       email,
       password,
     );
+     syncBookmarksWithFirestore();
     return userCredential.user;
   } catch (error) {
     console.log('Error signing in with email and password:', error);
@@ -73,6 +74,7 @@ export const signInWithGoogle = async () => {
     const userCredential = await auth().signInWithCredential(googleCredential);
     console.log(userCredential.user, 'userCredential');
     await saveUserData(userCredential.user, '');
+    syncBookmarksWithFirestore();
     return userCredential;
   } catch (error) {
     console.log('Error signing in with Google:', error);

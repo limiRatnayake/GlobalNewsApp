@@ -1,6 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 import auth from '@react-native-firebase/auth';
 import {generateUniqueId} from '../utils/uniqueArticleId';
+import { addBookmarksToFirebase, removeBookmarkFromFirestore } from './user';
 
 const db = SQLite.openDatabase(
   {
@@ -241,6 +242,7 @@ export const addBookmark = async (article, callback) => {
         ],
         () => {
           console.log('Bookmark added successfully');
+          addBookmarksToFirebase(article, articleId);
           if (callback) callback(true); 
         },
         error => {
@@ -251,6 +253,39 @@ export const addBookmark = async (article, callback) => {
     });
   });
 };
+
+
+
+export const initialBookmarkAdded = (article, callback) => {
+  const userId = auth().currentUser.uid;
+  const articleId = generateUniqueId(article);
+  db.transaction(txn => {
+    txn.executeSql(
+      `INSERT OR IGNORE INTO bookmarks (userId, articleId, title, author, publishedAt, category, url, urlToImage, content) VALUES (?, ?, ?, ?, ?,?, ?, ?, ?)`,
+      [
+        userId,
+        articleId,
+        article.title,
+        article.author,
+        article.publishedAt,
+        article.category,
+        article.url,
+        article.urlToImage,
+        article.content,
+      ],
+      () => {
+        console.log('Bookmark added successfully'); 
+        getBookmarks();
+        if (callback) callback(true);
+      },
+      error => {
+        console.log('Error adding bookmark: ', error);
+        if (callback) callback(false);
+      },
+    );
+  });
+};
+
 
 export const isArticleBookmarked = (articleId, callback) => {
   const userId = auth().currentUser.uid;
@@ -264,7 +299,7 @@ export const isArticleBookmarked = (articleId, callback) => {
           callback(true);
         } else {
           callback(false);
-        }
+        } 
       },
       error => {
         console.log('Error checking bookmark status: ', error);
@@ -282,6 +317,7 @@ export const removeBookmark = articleId => {
       [userId, articleId],
       () => {
         console.log('Bookmark removed successfully');
+        removeBookmarkFromFirestore(articleId);
       },
       error => {
         console.log('Error removing bookmark: ', error);

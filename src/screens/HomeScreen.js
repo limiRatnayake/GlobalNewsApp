@@ -17,7 +17,8 @@ import ProfileImage from '../components/ProfileImage';
 import {useIsFocused} from '@react-navigation/native';
 import theme from '../../styles/theme';
 import {useDispatch, useSelector} from 'react-redux';
-import { getTotalNotificationCount } from '../store/actions/notificationAction';
+import {getTotalNotificationCount} from '../store/actions/notificationAction';
+import { generateUniqueId } from '../utils/uniqueArticleId';
 
 const HomeScreen = props => {
   const [recommendedArticles, setRecommendedArticles] = useState([]);
@@ -40,7 +41,7 @@ const HomeScreen = props => {
     if (isFocused || networkAvailability) {
       setRecommendedArticles([]);
       setCurrentPage(1);
-      setIsLoading(true); 
+      setIsLoading(true);
       setHasMoreArticles(true);
       getNewArticles(1, debouncedQuery);
       dispatch(getTotalNotificationCount(0));
@@ -51,13 +52,14 @@ const HomeScreen = props => {
 
   useEffect(() => {
     console.log(fromDate, toDate, callNewsArticles);
-    
+
     if (callNewsArticles) {
+      setRecommendedArticles([]); 
       getNewArticles(1, debouncedQuery);
       setRecommendedArticles([]);
     }
   }, [selectedOption, fromDate, toDate]);
- 
+
   useEffect(() => {
     setCurrentPage(1);
     setRecommendedArticles([]);
@@ -66,7 +68,7 @@ const HomeScreen = props => {
   }, [debouncedQuery]);
 
   const getNewArticles = useCallback(
-    async page => {
+    async (page = 1) => {
       try {
         let newArticles = await fetchLatestNewsArticles(
           debouncedQuery,
@@ -76,10 +78,21 @@ const HomeScreen = props => {
           toDate,
         );
         if (newArticles?.length > 0) {
-          setRecommendedArticles(prevArticles => [
-            ...prevArticles,
-            ...newArticles,
-          ]);
+          console.log(recommendedArticles, newArticles, 'limani');
+
+          setRecommendedArticles(prevArticles => {
+            const articleSet = new Set(
+              prevArticles.map(article => article.articleId),
+            );
+            const uniqueNewArticles = newArticles
+              .map(article => ({
+                ...article,
+                articleId: generateUniqueId(article),  
+              }))
+              .filter(article => !articleSet.has(article.articleId));  
+
+            return [...prevArticles, ...uniqueNewArticles];
+          });
           setHasMoreArticles(true);
         } else {
           setHasMoreArticles(false);
@@ -95,7 +108,14 @@ const HomeScreen = props => {
         setCallNewsArticles(false);
       }
     },
-    [selectedOption, isLoading, hasMoreArticles, debouncedQuery, fromDate, toDate],
+    [
+      selectedOption,
+      isLoading,
+      hasMoreArticles,
+      debouncedQuery,
+      fromDate,
+      toDate,
+    ],
   );
   const renderRecommendedNewsItem = ({item, index}) => {
     return (
@@ -129,8 +149,6 @@ const HomeScreen = props => {
     setSelectedOption(option);
     setFromDate(fromDate);
     setToDate(toDate);
-    
-    
   };
 
   return (
@@ -192,7 +210,7 @@ const HomeScreen = props => {
             if (!loadingMore && hasMoreArticles) {
               setLoadingMore(true);
               setCurrentPage(prevPage => prevPage + 1);
-              getNewArticles(currentPage);
+              getNewArticles(currentPage + 1);
             }
           }}
           onEndReachedThreshold={0.9}
