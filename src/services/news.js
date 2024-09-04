@@ -44,7 +44,7 @@ console.log(
 
       return articles;
     } catch (error) {
-      console.error('Error fetching news articles:', error);
+      console.log('Error fetching news articles:', error);
       return [];
     }
   } else {

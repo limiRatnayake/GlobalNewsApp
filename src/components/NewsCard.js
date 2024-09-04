@@ -10,6 +10,8 @@ import {
   isArticleBookmarked,
   removeBookmark,
 } from '../services/SQLiteService';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCheckBookmark } from '../store/reducers/loaderSlice';
 
 const NewsCard = ({
   index,
@@ -25,17 +27,22 @@ const NewsCard = ({
   navigation,
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
-
+  const {checkForBookmarks} = useSelector(state => state.loader);
   const articleId = articleIdNo == '' ? generateUniqueId(article) : articleIdNo;
-
-  useEffect(() => {
-    const checkBookmarkStatus = async () => {
-      if (articleId) {
-        isArticleBookmarked(articleId, setIsBookmarked); 
-      }
-    };
-    checkBookmarkStatus();
-  }, [articleId]);
+const dispatch = useDispatch();
+  useEffect(
+    () => {
+      const checkBookmarkStatus = async () => {
+        if (articleId) {
+          isArticleBookmarked(articleId, setIsBookmarked);
+          dispatch(updateCheckBookmark(false));
+        }
+      };
+      checkBookmarkStatus();
+    },
+    [articleId],
+    checkForBookmarks,
+  );
 
   const toggleBookmark = () => {
     if (isBookmarked) {

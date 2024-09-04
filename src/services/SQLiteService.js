@@ -2,6 +2,8 @@ import SQLite from 'react-native-sqlite-storage';
 import auth from '@react-native-firebase/auth';
 import {generateUniqueId} from '../utils/uniqueArticleId';
 import { addBookmarksToFirebase, removeBookmarkFromFirestore } from './user';
+import store from '../store/store';
+import { updateCheckBookmark } from '../store/reducers/loaderSlice';
 
 const db = SQLite.openDatabase(
   {
@@ -87,7 +89,7 @@ export const createTables = () => {
   });
 };
 
-// Insert articles into the database
+// Insert articles into the database for offline support
 export const insertArticles = (articles, category, query) => {
   db.transaction(txn => {
     articles.forEach(article => {
@@ -275,12 +277,13 @@ export const initialBookmarkAdded = (article, callback) => {
       ],
       () => {
         console.log('Bookmark added successfully'); 
-        getBookmarks();
+        store.dispatch(updateCheckBookmark(true));
         if (callback) callback(true);
       },
       error => {
         console.log('Error adding bookmark: ', error);
         if (callback) callback(false);
+        store.dispatch(updateCheckBookmark(false));
       },
     );
   });
@@ -295,6 +298,8 @@ export const isArticleBookmarked = (articleId, callback) => {
       `SELECT * FROM bookmarks WHERE userId = ? AND articleId = ?`,
       [userId, articleId],
       (tx, results) => { 
+        console.log(results.rows.length, 'isArticleBookmarked');
+        
         if (results.rows.length > 0) {
           callback(true);
         } else {

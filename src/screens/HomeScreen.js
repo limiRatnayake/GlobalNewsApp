@@ -77,8 +77,7 @@ const HomeScreen = props => {
           fromDate,
           toDate,
         );
-        if (newArticles?.length > 0) {
-          console.log(recommendedArticles, newArticles, 'limani');
+        if (newArticles?.length > 0) { 
 
           setRecommendedArticles(prevArticles => {
             const articleSet = new Set(
