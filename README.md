@@ -26,7 +26,7 @@ yarn start
 
 ## Download App (APK) 
 
-[**Download Global News App…**](https://github.com/limiRatnayake/GlobalNewsApp/releases/tag/v1.0.0)
+[**Download Global News App…**](https://github.com/limiRatnayake/GlobalNewsApp/releases/tag/v1.0.1)
 
 
 ## Features
