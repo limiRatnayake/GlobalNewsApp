@@ -5,8 +5,7 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+} from 'react-native'; 
 import NewsCard from '../components/NewsCard';
 import styles from '../../styles/DiscoverScreenStyles';
 import globalStyles from '../../styles/GlobalStyles';

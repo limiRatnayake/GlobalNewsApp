@@ -4,8 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Alert,
+  ScrollView, 
   ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';

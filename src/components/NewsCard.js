@@ -1,8 +1,7 @@
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-// import {addBookmark, checkIsBookmarked, removeBookmark} from '../services/user';
+import Icon from 'react-native-vector-icons/MaterialIcons'; 
 import {generateUniqueId} from '../utils/uniqueArticleId';
 import theme from '../../styles/theme';
 import {

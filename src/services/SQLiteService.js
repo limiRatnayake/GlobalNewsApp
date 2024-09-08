@@ -184,26 +184,6 @@ export const getCategories = callback => {
     );
   });
 };
-// clear the table
-export const clearTable = tableName => {
-  db.transaction(txn => {
-    txn.executeSql(
-      `DELETE FROM ${tableName}`,
-      [],
-      () => {
-        console.log(
-          `All records from the ${tableName} table have been cleared successfully`,
-        );
-      },
-      error => {
-        console.log(
-          `Error clearing records from the ${tableName} table: `,
-          error,
-        );
-      },
-    );
-  });
-};
 
 //add bookmark
 export const addBookmark = async (article, callback) => {

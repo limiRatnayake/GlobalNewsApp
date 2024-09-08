@@ -1,13 +1,9 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {signOut} from './auth';
-import store from '../store/store';
-import {setIsBookmarked} from '../store/reducers/articleSlice';
-import {
-  addBookmark,
-  getBookmarks,
-  initialBookmarkAdded,
-  isArticleBookmarked,
+import store from '../store/store'; 
+import { 
+  initialBookmarkAdded, 
 } from './SQLiteService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getTotalNotificationCount} from '../store/actions/notificationAction';

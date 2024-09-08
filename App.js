@@ -4,12 +4,11 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AppNavigator from './src/navigation/AppNavigator';
 import globalStyles from './styles/GlobalStyles';
 import store from './src/store/store';
-import {Provider, useDispatch} from 'react-redux';
+import {Provider} from 'react-redux';
 import {
   notificationListener,
   requestUserPermission,
 } from './src/services/notifications';
-import {clearTable} from './src/services/SQLiteService';
 import OfflineAlert from './src/components/OfflineAlert';
 
 function App() {

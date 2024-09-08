@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import theme from '../../styles/theme';
 import globalStyles from '../../styles/GlobalStyles';
-import {useDispatch, useSelector} from 'react-redux';
+import { useSelector} from 'react-redux';
 import { deleteNotification, getNotifications } from '../services/user';
 
 const NotificationScreen = props => {

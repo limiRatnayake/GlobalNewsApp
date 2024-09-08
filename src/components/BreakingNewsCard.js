@@ -4,8 +4,7 @@ import theme from '../../styles/theme';
 import {formatDate, getDifferenceFromNow} from '../utils/dateUtils';
 
 const BreakingNewsCard = ({item, index}) => {
-  const timeSincePublished = getDifferenceFromNow(item.publishedAt);
-  const formattedDate = formatDate(item.publishedAt);
+  const timeSincePublished = getDifferenceFromNow(item.publishedAt); 
   const imageUrl = item.urlToImage !== '' ? item.urlToImage : null;
 
   const Container = imageUrl ? ImageBackground : View;

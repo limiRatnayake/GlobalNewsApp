@@ -2,20 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
-  Button,
-  ScrollView,
-  StyleSheet,
+  TextInput, 
+  ScrollView, 
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProfileImage from '../components/ProfileImage';
 import globalStyles from '../../styles/GlobalStyles';
-import theme from '../../styles/theme';
-import Icon2 from 'react-native-vector-icons/FontAwesome';
+import theme from '../../styles/theme'; 
 import {signOut} from '../services/auth';
-import {getUserProfile, saveUserData, updateUserData} from '../services/user';
+import {getUserProfile, updateUserData} from '../services/user';
 import {validateEmail, validateName} from '../utils/validation';
 import styles from '../../styles/ProfileScreenStyles';
 

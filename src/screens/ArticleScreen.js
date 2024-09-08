@@ -10,7 +10,7 @@ import {SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import theme from '../../styles/theme';
 import moment from 'moment';
 import {
